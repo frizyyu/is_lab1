@@ -1,2 +1,5 @@
-<app-nx-welcome></app-nx-welcome>
-<router-outlet></router-outlet>
+<tui-root
+  [attr.tuiTheme]="darkMode() ? 'dark' : null"
+>
+  <router-outlet></router-outlet>
+</tui-root>

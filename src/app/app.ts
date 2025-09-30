@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { TUI_DARK_MODE, TuiRoot } from '@taiga-ui/core';
+import { Store } from '@ngrx/store';
+import { rootActions } from '../state/actions/root.actions';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [RouterModule, TuiRoot, TuiRoot],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.less',
 })
 export class App {
-  protected title = 'front';
+  protected readonly store$ = inject(Store);
+  protected readonly darkMode = inject(TUI_DARK_MODE);
+
+  public ngOnInit() {
+    this.store$.dispatch(rootActions.applicationStart())
+  }
 }

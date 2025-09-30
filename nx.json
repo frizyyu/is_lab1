@@ -47,6 +47,9 @@
       "linter": "eslint",
       "style": "less",
       "unitTestRunner": "none"
+    },
+    "@nx/angular:component": {
+      "style": "css"
     }
   },
   "defaultProject": "front"
