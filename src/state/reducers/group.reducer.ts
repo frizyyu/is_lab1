@@ -26,5 +26,9 @@ export const groupFeature = createFeature({
         draftGroups: [...state.draftGroups, group],
       })
     ),
+    on(groupActions.endEditDraft, (state, { group }) => ({
+      ...state,
+      draftGroups: state.draftGroups.map(d => d.number === group.number ? group : d),
+    })),
   ),
 });

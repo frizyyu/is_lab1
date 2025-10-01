@@ -154,17 +154,17 @@
             <td tuiTd>{{ g.studentsCount }}</td>
             <td tuiTd>{{ g.expelledStudents }}</td>
             <td tuiTd>{{ g.transferredStudents }}</td>
-            <td tuiTd>{{ FormOfEducation[g.formOfEducation] }}</td>
+            <td tuiTd>{{ formOfEducation[g.formOfEducation] }}</td>
             <td tuiTd>{{ g.shouldBeExpelled }}</td>
-            <td tuiTd>{{ g.semesterEnum }}</td>
+            <td tuiTd>{{ semester[g.semesterEnum] }}</td>
             <td tuiTd>
               {{ g.groupAdmin?.name }}
             </td>
             <td tuiTd>
-              {{ Color[g.groupAdmin?.eyeColor] }}
+              {{ color[g.groupAdmin?.eyeColor] }}
             </td>
             <td tuiTd>
-              {{ Color[g.groupAdmin?.hairColor] }}
+              {{ color[g.groupAdmin?.hairColor] }}
             </td>
             <td tuiTd>
               ({{ g.groupAdmin?.location.x }}; {{ g.groupAdmin?.location.y }}; {{ g.groupAdmin?.location.z }})
@@ -173,7 +173,7 @@
               {{ g.groupAdmin?.height }}
             </td>
             <td tuiTd>
-              {{ Nationality[g.groupAdmin?.nationality] }}
+              {{ nationality[g.groupAdmin?.nationality] }}
             </td>
           </tr>
         }
@@ -198,17 +198,17 @@
             <td tuiTd>{{ dg.studentsCount }}</td>
             <td tuiTd>{{ dg.expelledStudents }}</td>
             <td tuiTd>{{ dg.transferredStudents }}</td>
-            <td tuiTd>{{ FormOfEducation[dg.formOfEducation] }}</td>
+            <td tuiTd>{{ formOfEducation[dg.formOfEducation] }}</td>
             <td tuiTd>{{ dg.shouldBeExpelled }}</td>
-            <td tuiTd>{{ dg.semesterEnum }}</td>
+            <td tuiTd>{{ semester[dg.semesterEnum] }}</td>
             <td tuiTd>
               {{ dg.groupAdmin?.name }}
             </td>
             <td tuiTd>
-              {{ Color[dg.groupAdmin?.eyeColor] }}
+              {{ color[dg.groupAdmin?.eyeColor] }}
             </td>
             <td tuiTd>
-              {{ Color[dg.groupAdmin?.hairColor] }}
+              {{ color[dg.groupAdmin?.hairColor] }}
             </td>
             <td tuiTd>
               ({{ dg.groupAdmin?.location.x }}; {{ dg.groupAdmin?.location.y }}; {{ dg.groupAdmin?.location.z }})
@@ -217,7 +217,7 @@
               {{ dg.groupAdmin?.height }}
             </td>
             <td tuiTd>
-              {{ Nationality[dg.groupAdmin?.nationality] }}
+              {{ nationality[dg.groupAdmin?.nationality] }}
             </td>
 
             <td tuiTd>
@@ -264,7 +264,16 @@
     </button>
   </span>
   }
-  <app-edit [currentRow]="selectedRow"/>
+  <ng-template
+    [tuiDialogOptions]="{ label: 'Edit group', size: 'm' }"
+    [(tuiDialog)]="showEditDialog"
+    class="edit-dialog"
+  >
+    <app-edit
+      [currentRow]="selectedRow"
+      (closed)="showEditDialog = false"
+    ></app-edit>
+  </ng-template>
 } @else {
   <app-error-page/>
 }

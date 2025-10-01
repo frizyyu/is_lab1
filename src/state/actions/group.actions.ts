@@ -15,6 +15,9 @@ export const groupActions = createActionGroup({
     createFailed: props<{ error: unknown }>(),
     createDraft: props<{ group: Group }>(),
 
+    startEditDraft: props<{group: Group}>(),
+    endEditDraft: props<{ group: Group }>(),
+
     update: props<{ id: number; changes: Omit<Group, 'id'> }>(),
     updateSuccess: props<{ group: Group }>(),
     updateFailed: props<{ error: unknown }>(),

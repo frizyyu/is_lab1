@@ -9,12 +9,33 @@
   flex-direction: column;
   justify-content: left;
   padding-left: 3rem;
+  gap: 1.25rem;
 }
 
 .inline-field {
-  min-width: 0.5rem;
+  min-width: 12rem;
+  &_small {
+    min-width: 0.5rem;
+  }
   max-width: 15rem;
 }
+
 input {
   text-decoration: underline;
+}
+
+.text-field {
+  width: 20rem;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
 }

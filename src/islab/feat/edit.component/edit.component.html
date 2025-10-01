@@ -1,78 +1,79 @@
-<div class="current-row">
-  <form [formGroup]="form" tuiForm>
-    <li>number: {{currentRow().number}}</li>
-    <span>name: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="name"
-        [(ngModel)]="currentRow().name"
+ <div class="current-row">
+    @if (currentRow(); as currentRow){
+      <form [formGroup]="form" tuiForm class="form">
+        <span class="info-container">number: {{currentRow.number}}</span>
+        <span class="info-container">name: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="name"
+             [ngModel]="currentRow.name"
       />
     </tui-input-inline>
       </span>
-    <span>coordinates: (<tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="x"
-        [(ngModel)]="currentRow().coordinates.x"
+        <span class="info-container">coordinates: (<tui-input-inline class="inline-field_small">
+      <input placeholder="_______________"
+             formControlName="x"
+             [ngModel]="currentRow.coordinates.x"
       />
-    </tui-input-inline>; <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="y"
-        [(ngModel)]="currentRow().coordinates.y"
+    </tui-input-inline>; <tui-input-inline class="inline-field_small">
+      <input placeholder="_______________"
+             formControlName="y"
+             [ngModel]="currentRow.coordinates.y"
       />
     </tui-input-inline>)</span>
-    <span>creation date: {{currentRow().creationDate}}</span>
-    <span>studentsCount: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="studentsCount"
-        [(ngModel)]="currentRow().studentsCount"
+        <span class="info-container">creation date: {{currentRow.creationDate | date:'short' }}</span>
+        <span class="info-container">studentsCount: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="studentsCount"
+             [ngModel]="currentRow.studentsCount"
       />
     </tui-input-inline></span>
-    <span>expelledStudents: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="expelledStudents"
-        [(ngModel)]="currentRow().expelledStudents"
+        <span class="info-container">expelledStudents: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="expelledStudents"
+             [ngModel]="currentRow.expelledStudents"
       />
     </tui-input-inline></span>
-    <span>transferredStudents: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="transferredStudents"
-        [(ngModel)]="currentRow().transferredStudents"
+        <span class="info-container">transferredStudents: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="transferredStudents"
+             [ngModel]="currentRow.transferredStudents"
       />
     </tui-input-inline></span>
-    <span>formOfEducation: <tui-textfield
-      tuiChevron
-    >
+        <span class="info-container">formOfEducation: <tui-textfield class="text-field"
+          tuiChevron
+        >
           <select
             placeholder="Choose"
             tuiSelect
             formControlName="formOfEducation"
             [items]="formOfEducation"
-            [(ngModel)]="formOfEducation[currentRow().formOfEducation]"
+            [ngModel]="formOfEducation[currentRow.formOfEducation]"
           ></select></tui-textfield></span>
-    <span>shouldBeExpelled: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="shouldBeExpelled"
-        [(ngModel)]="currentRow().shouldBeExpelled"
+        <span class="info-container">shouldBeExpelled: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="shouldBeExpelled"
+             [ngModel]="currentRow.shouldBeExpelled"
       />
     </tui-input-inline></span>
-    <span>semesterEnum: <tui-textfield
-      tuiChevron
-    >
+        <span class="info-container">semesterEnum: <tui-textfield class="text-field"
+          tuiChevron
+        >
           <select
             placeholder="Choose"
             tuiSelect
             formControlName="semesterEnum"
             [items]="semesterEnum"
-            [(ngModel)]="semesterEnum[currentRow().semesterEnum]"
+            [ngModel]="semesterEnum[currentRow.semesterEnum]"
           ></select></tui-textfield></span>
-    <span>groupAdmin: </span>
-    <span class="tab">
-      <span>name: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="groupAdminName"
-        [(ngModel)]="currentRow().groupAdmin.name"
+        <span class="info-container">groupAdmin: </span>
+        <span class="tab">
+      <span class="info-container">name: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="groupAdminName"
+             [ngModel]="currentRow.groupAdmin.name"
       />
     </tui-input-inline></span>
-      <span>eyeColor: <tui-textfield
+      <span class="info-container">eyeColor: <tui-textfield class="text-field"
         tuiChevron
       >
           <select
@@ -80,42 +81,42 @@
             tuiSelect
             formControlName="eyeColor"
             [items]="eyeColor"
-            [(ngModel)]="eyeColor[currentRow().groupAdmin.eyeColor]"
+            [ngModel]="eyeColor[currentRow.groupAdmin.eyeColor]"
           ></select></tui-textfield></span>
-      <span>hairColor:
-        <tui-textfield
+      <span class="info-container">hairColor:
+        <tui-textfield class="text-field"
           tuiChevron
         >
           <select
-        placeholder="Choose"
-        tuiSelect
-        formControlName="hairColor"
-        [items]="hairColor"
-        [(ngModel)]="hairColor[currentRow().groupAdmin.hairColor]"
+            placeholder="Choose"
+            tuiSelect
+            formControlName="hairColor"
+            [items]="hairColor"
+            (ngModel)="hairColor[currentRow.groupAdmin.hairColor]"
           ></select></tui-textfield></span>
-      <span>location: (<tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="locationX"
-        [(ngModel)]="currentRow().groupAdmin.location.x"
+      <span class="info-container">location: (<tui-input-inline class="inline-field_small">
+      <input placeholder="_______________"
+             formControlName="locationX"
+             [ngModel]="currentRow.groupAdmin.location.x"
       />
-    </tui-input-inline>; <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="locationY"
-        [(ngModel)]="currentRow().groupAdmin.location.y"
+    </tui-input-inline>; <tui-input-inline class="inline-field_small">
+      <input placeholder="_______________"
+             formControlName="locationY"
+             [ngModel]="currentRow.groupAdmin.location.y"
       />
-    </tui-input-inline>; <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="locationZ"
-        [(ngModel)]="currentRow().groupAdmin.location.z"
+    </tui-input-inline>; <tui-input-inline class="inline-field_small">
+      <input placeholder="_______________"
+             formControlName="locationZ"
+             [ngModel]="currentRow.groupAdmin.location.z"
       />
     </tui-input-inline>)</span>
-      <span>height: <tui-input-inline class="inline-field">
-      <input placeholder="_"
-        formControlName="height"
-        [(ngModel)]="currentRow().groupAdmin.height"
+      <span class="info-container">height: <tui-input-inline class="inline-field">
+      <input placeholder="_______________"
+             formControlName="height"
+             [ngModel]="currentRow.groupAdmin.height"
       />
     </tui-input-inline></span>
-      <span>nationality: <tui-textfield
+      <span class="info-container">nationality: <tui-textfield class="text-field"
         tuiChevron
       >
           <select
@@ -123,8 +124,20 @@
             tuiSelect
             formControlName="nationality"
             [items]="nationality"
-            [(ngModel)]="nationality[currentRow().groupAdmin.nationality]"
+            [ngModel]="nationality[currentRow.groupAdmin.nationality]"
           ></select></tui-textfield></span>
     </span>
-  </form>
-</div>
+        <div class="actions">
+          <button
+            tuiButton
+            type="button"
+            (click)="applyChangesClicked()"
+            [disabled]="form.invalid || !form.dirty"
+            appearance="primary"
+          >
+            Apply
+          </button>
+        </div>
+      </form>
+    }
+  </div>
