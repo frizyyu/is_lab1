@@ -133,7 +133,7 @@
       <tbody
         tuiTbody
       >
-        @for (g of groups; track g.number) {
+        @for (g of groups; track g.id) {
           <tr tuiTr>
             <td tuiTd>
               <input
@@ -143,7 +143,7 @@
                 [tuiCheckboxRow]="g"
               />
             </td>
-            <td tuiTd>{{ g.number }}</td>
+            <td tuiTd>{{ g.id }}</td>
             <td tuiTd>{{ g.name }}</td>
             <td tuiTd>
               ({{ g.coordinates.x }}, {{ g.coordinates.y }})
@@ -154,17 +154,17 @@
             <td tuiTd>{{ g.studentsCount }}</td>
             <td tuiTd>{{ g.expelledStudents }}</td>
             <td tuiTd>{{ g.transferredStudents }}</td>
-            <td tuiTd>{{ formOfEducation[g.formOfEducation] }}</td>
+            <td tuiTd>{{ g.formOfEducation }}</td>
             <td tuiTd>{{ g.shouldBeExpelled }}</td>
-            <td tuiTd>{{ semester[g.semesterEnum] }}</td>
+            <td tuiTd>{{ g.semesterEnum }}</td>
             <td tuiTd>
               {{ g.groupAdmin?.name }}
             </td>
             <td tuiTd>
-              {{ color[g.groupAdmin?.eyeColor] }}
+              {{ g.groupAdmin?.eyeColor }}
             </td>
             <td tuiTd>
-              {{ color[g.groupAdmin?.hairColor] }}
+              {{ g.groupAdmin?.hairColor }}
             </td>
             <td tuiTd>
               ({{ g.groupAdmin?.location.x }}; {{ g.groupAdmin?.location.y }}; {{ g.groupAdmin?.location.z }})
@@ -173,7 +173,19 @@
               {{ g.groupAdmin?.height }}
             </td>
             <td tuiTd>
-              {{ nationality[g.groupAdmin?.nationality] }}
+              {{ g.groupAdmin?.nationality }}
+            </td>
+
+            <td tuiTd>
+              <button
+                size="xs"
+                tuiButton
+                type="button"
+                (click)="editRow(g)"
+                class="edit-row"
+              >
+                edit
+              </button>
             </td>
           </tr>
         }
@@ -187,7 +199,7 @@
                 [tuiCheckboxRow]="dg"
               />
             </td>
-            <td tuiTd>{{ dg.number }}</td>
+            <td tuiTd>{{ dg.id }}</td>
             <td tuiTd>{{ dg.name }}</td>
             <td tuiTd>
               ({{ dg.coordinates.x }}, {{ dg.coordinates.y }})
@@ -198,17 +210,17 @@
             <td tuiTd>{{ dg.studentsCount }}</td>
             <td tuiTd>{{ dg.expelledStudents }}</td>
             <td tuiTd>{{ dg.transferredStudents }}</td>
-            <td tuiTd>{{ formOfEducation[dg.formOfEducation] }}</td>
+            <td tuiTd>{{ dg.formOfEducation }}</td>
             <td tuiTd>{{ dg.shouldBeExpelled }}</td>
-            <td tuiTd>{{ semester[dg.semesterEnum] }}</td>
+            <td tuiTd>{{ dg.semesterEnum }}</td>
             <td tuiTd>
               {{ dg.groupAdmin?.name }}
             </td>
             <td tuiTd>
-              {{ color[dg.groupAdmin?.eyeColor] }}
+              {{ dg.groupAdmin?.eyeColor }}
             </td>
             <td tuiTd>
-              {{ color[dg.groupAdmin?.hairColor] }}
+              {{ dg.groupAdmin?.hairColor }}
             </td>
             <td tuiTd>
               ({{ dg.groupAdmin?.location.x }}; {{ dg.groupAdmin?.location.y }}; {{ dg.groupAdmin?.location.z }})
@@ -217,7 +229,7 @@
               {{ dg.groupAdmin?.height }}
             </td>
             <td tuiTd>
-              {{ nationality[dg.groupAdmin?.nationality] }}
+              {{ dg.groupAdmin?.nationality }}
             </td>
 
             <td tuiTd>
@@ -258,7 +270,7 @@
       tuiButton
       type="button"
       class="tui-island__footer-button"
-      (click)="addButtonClicked()"
+      (click)="addRow()"
     >
       Добавить
     </button>

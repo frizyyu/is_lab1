@@ -4,7 +4,7 @@ import { GroupState } from '../interface/group-state.interface';
 
 export const initialGroupState: GroupState = {
   groups: null,
-  draftGroups: null,
+  draftGroups: [],
 }
 
 export const groupFeature = createFeature({
@@ -16,7 +16,6 @@ export const groupFeature = createFeature({
       (state, {groups}): GroupState => ({
         ...state,
         groups: groups,
-        draftGroups: groups,
       })
     ),
     on(
@@ -26,9 +25,29 @@ export const groupFeature = createFeature({
         draftGroups: [...state.draftGroups, group],
       })
     ),
-    on(groupActions.endEditDraft, (state, { group }) => ({
+    on(groupActions.endEdit, (state, { group }) => ({
       ...state,
-      draftGroups: state.draftGroups.map(d => d.number === group.number ? group : d),
+      groups: state.groups.map(d => d.id === group.id ? group : d),
+      draftGroups: state.draftGroups.map(d => d.draftId === group.draftId ? group : d),
     })),
+    on(groupActions.createSuccess, (state, { groups }) => {
+      const createdDraftIds = new Set(groups.map(g => g.draftId));
+
+      return {
+        ...state,
+        draftGroups: state.draftGroups.filter(d => !createdDraftIds.has(d.draftId)),
+      };
+    }),
+    on(groupActions.deleteSuccess, (state, { ids, draftIds }) => {
+        const idsSet = new Set(ids);
+        const draftIdsSet = new Set(draftIds);
+        return {
+          ...state,
+          groups: state.groups.filter((d) => !idsSet.has(d.id)),
+          draftGroups: state.draftGroups.filter(
+            (d) => !draftIdsSet.has(d.draftId)
+          ),
+        };
+    })
   ),
 });

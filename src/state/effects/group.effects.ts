@@ -7,18 +7,23 @@ import {
   EMPTY,
   interval,
   map,
+  of,
   startWith,
   switchMap,
   take,
-  takeUntil, tap,
+  takeUntil,
+  tap,
   timer,
 } from 'rxjs';
 import { ApiService } from '../../islab/api/api.service';
 import { routerActions } from '../actions/router.actions';
-import { TuiAlertOptions, TuiAlertService } from '@taiga-ui/core';
-import {injectContext, PolymorpheusComponent} from '@taiga-ui/polymorpheus';
-import { Router } from '@angular/router';
+import {
+  TuiAlertOptions,
+  TuiAlertService,
+} from '@taiga-ui/core';
+import {injectContext} from '@taiga-ui/polymorpheus';
 import { TuiPopover } from '@taiga-ui/cdk';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export const onLoad$ = createEffect(
   (actions$ = inject(Actions), apiService$ = inject(ApiService)) => {
@@ -69,21 +74,150 @@ export class AlertExample {
 }
 
 export const onCreateDraft$ = createEffect(
-  (actions$ = inject(Actions), alerts$ = inject(TuiAlertService)) => {
+  (actions$ = inject(Actions), alerts = inject(TuiAlertService)) => {
     return actions$.pipe(
       ofType(groupActions.createDraft),
-      //алерт
+      tap(() => {
+        alerts
+          .open(`Created new draft`, {
+            label: 'Draft creation',
+            autoClose: 5000,
+          })
+          .subscribe();
+      })
     )
   },
   {functional: true, dispatch: false}
 );
 
-export const onCreate$ = createEffect(
-  (actions$ = inject(Actions)) => {
+export const createGroups$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    api = inject(ApiService),
+  ) => {
     return actions$.pipe(
       ofType(groupActions.create),
-      //отправка на бек с созданием и дальше нотификейшн если ок, или не ок
-    )
+      switchMap(({ groups }) =>
+        api.createGroups(groups).pipe(
+          map(() => groupActions.createSuccess({groups})),
+          catchError((error: HttpErrorResponse) =>
+            of(groupActions.createFailed({ error }))
+          )
+        )
+      )
+    );
   },
-  {functional: true}
+  { functional: true }
+);
+
+export const reloadAfterAdd$ = createEffect(
+  (
+    actions$ = inject(Actions),
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.createSuccess),
+      map(() => groupActions.load())
+    );
+  },
+  { functional: true }
+);
+
+export const notifyCreateSuccess$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    alerts = inject(TuiAlertService)
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.createSuccess),
+      tap(() => {
+        alerts
+          .open(`Group(s) created`, {
+            label: 'Groups creation',
+            autoClose: 5000,
+          })
+          .subscribe();
+      })
+    );
+  },
+  { functional: true, dispatch: false }
+);
+
+export const notifyCreateFailure$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    alerts = inject(TuiAlertService)
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.createFailed),
+      tap(({ error }) => {
+        alerts
+          .open(`Error while group creating: ${error.message}`, {
+            label: 'Groups creation',
+            autoClose: 5000,
+          })
+          .subscribe();
+      })
+    );
+  },
+  { functional: true, dispatch: false }
+);
+
+export const deleteGroups$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    api = inject(ApiService),
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.delete),
+      switchMap(({ ids, draftIds }) =>
+        api.deleteGroups(ids).pipe(
+          map(() => groupActions.deleteSuccess({ids, draftIds})),
+          catchError((error: HttpErrorResponse) =>
+            of(groupActions.deleteFailed({ error }))
+          )
+        )
+      )
+    );
+  },
+  { functional: true }
+);
+
+export const notifyDeleteSuccess$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    alerts = inject(TuiAlertService)
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.deleteSuccess),
+      tap(() => {
+        alerts
+          .open(`Group(s) deleted`, {
+            label: 'Groups deletion',
+            autoClose: 5000,
+          })
+          .subscribe();
+      })
+    );
+  },
+  { functional: true, dispatch: false }
+);
+
+export const notifyDeleteFailure$ = createEffect(
+  (
+    actions$ = inject(Actions),
+    alerts = inject(TuiAlertService)
+  ) => {
+    return actions$.pipe(
+      ofType(groupActions.deleteFailed),
+      tap(({ error }) => {
+        alerts
+          .open(`Error while groups deleting: ${error.message}`, {
+            label: 'Groups deletion',
+            autoClose: 5000,
+          })
+          .subscribe();
+      })
+    );
+  },
+  { functional: true, dispatch: false }
 );

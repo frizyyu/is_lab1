@@ -20,6 +20,12 @@ import { TuiButton, TuiTextfield } from '@taiga-ui/core';
 import { groupActions } from '../../../state/actions/group.actions';
 import { Store } from '@ngrx/store';
 import { DatePipe } from '@angular/common';
+import {
+  enumRequired,
+  greaterThan,
+  isInteger,
+  nonEmptyString,
+} from '../../utils/validator';
 
 @Component({
   selector: 'app-edit',
@@ -57,47 +63,41 @@ export class EditComponent {
     (key) => isNaN(Number(key))
   );
   protected readonly fb = inject(FormBuilder);
+
   form = this.fb.group({
-    name: this.fb.control<string>('', {
-      validators: [Validators.required, Validators.maxLength(256)],
-    }),
-    studentsCount: this.fb.control<number>(0, {
-      validators: [Validators.min(0)],
+    name: this.fb.control<string>('', { validators: [nonEmptyString] }),
+    studentsCount: this.fb.control<number | null>(null, {
+      validators: [enumRequired, isInteger, greaterThan(0)], // > 0
     }),
     expelledStudents: this.fb.control<number>(0, {
-      validators: [Validators.min(0)],
+      validators: [isInteger],
+      updateOn: 'change',
     }),
     transferredStudents: this.fb.control<number>(0, {
-      validators: [Validators.min(0)],
+      validators: [isInteger],
     }),
-    formOfEducation: this.fb.control<FormOfEducation | null>(null),
-    shouldBeExpelled: this.fb.control<number>(0, {
-      validators: [Validators.min(1)],
+    formOfEducation: this.fb.control<FormOfEducation | null>(null, {
+      validators: [enumRequired],
+    }),
+    shouldBeExpelled: this.fb.control<number | null>(null, {
+      validators: [enumRequired, isInteger, greaterThan(0)],
     }),
     semesterEnum: this.fb.control<Semester | null>(null),
-    x: this.fb.control<number>(0, { validators: [Validators.required] }),
-    y: this.fb.control<number>(0, { validators: [Validators.required] }),
-    z: this.fb.control<number>(0, { validators: [Validators.required] }),
 
-    groupAdminName: this.fb.control<string>('', {
-      validators: [Validators.required, Validators.maxLength(256)],
-    }),
-    eyeColor: this.fb.control<Color | null>(null),
-    hairColor: this.fb.control<Color | null>(null),
-    height: this.fb.control<number | null>(null, {
-      validators: [Validators.min(0)],
-    }),
+    x: this.fb.control<number | null>(null, { validators: [enumRequired] }),
+    y: this.fb.control<number | null>(null, { validators: [enumRequired, isInteger] }),
+
+    groupAdminName: this.fb.control<string>('', { validators: [nonEmptyString] }),
+    eyeColor: this.fb.control<Color | null>(null, { validators: [enumRequired] }),
+    hairColor: this.fb.control<Color | null>(null, { validators: [enumRequired] }),
+    height: this.fb.control<number | null>(null, { validators: [enumRequired, greaterThan(0)] }),
     nationality: this.fb.control<Country | null>(null),
-    locationX: this.fb.control<number>(0, {
-      validators: [Validators.required],
-    }),
-    locationY: this.fb.control<number>(0, {
-      validators: [Validators.required],
-    }),
-    locationZ: this.fb.control<number>(0, {
-      validators: [Validators.required],
-    }),
+
+    locationX: this.fb.control<number | null>(null),
+    locationY: this.fb.control<number | null>(null, { validators: [enumRequired] }),
+    locationZ: this.fb.control<number | null>(null, { validators: [isInteger] }),
   });
+
 
   applyChangesClicked(): void {
     const row = this.currentRow();
@@ -153,7 +153,7 @@ export class EditComponent {
         nationality: toEnumValue(Country, v.nationality) as Country | null,
       },
     };
-    this.store$.dispatch(groupActions.endEditDraft({group: updated}));
+    this.store$.dispatch(groupActions.endEdit({group: updated}));
     this.closed.emit();
   }
 }

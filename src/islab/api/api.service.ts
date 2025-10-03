@@ -1,12 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Group } from '../types/group.type';
-import { of } from 'rxjs';
+import { catchError, EMPTY, Observable, of, throwError } from 'rxjs';
 import { FormOfEducation } from '../enums/form-of-education.enum';
 import { Semester } from '../enums/semester.enum';
 import { Color } from '../enums/color.enum';
 import { Country } from '../enums/country.enum';
+import { mapGroupsToBackendDto } from '../utils/dto-mappers';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -14,7 +15,7 @@ export class ApiService {
   private readonly http = inject(HttpClient)
 
   //впадлу мокать, я так захардкодил :)
-  public getGroups() {
+  /*public getGroups() {
     const groups: Group[] = [
       {
         number: 1,
@@ -29,7 +30,7 @@ export class ApiService {
         transferredStudents: 6,
         formOfEducation: FormOfEducation.DISTANCE_EDUCATION,
         shouldBeExpelled: 7,
-        semesterEnum: Semester.EIGHT,
+        semesterEnum: Semester.EIGHTH,
         groupAdmin: {
           name: 'qqq',
           eyeColor: Color.BLUE,
@@ -46,12 +47,22 @@ export class ApiService {
     ];
 
     return of<Group[]>(groups);
-  }
+  }*/
 
-    /*public getGroups() {
+  public getGroups() {
     return this.http.get<Group[]>(`${this.base}/groups`)
       .pipe(catchError((error: HttpErrorResponse) =>
         error.status === 421 ? throwError(error) : EMPTY
       ));
-  }*/
+  }
+
+  public createGroups(groups: Group[]): Observable<Group[]> {
+    return this.http.post<Group[]>(`${this.base}/groups/batch`, mapGroupsToBackendDto(groups));
+  }
+
+  public deleteGroups(ids: number[]) {
+    return this.http.request<void>('DELETE', `${this.base}/groups/batch`, {
+      body: ids,
+    });
+  }
 }

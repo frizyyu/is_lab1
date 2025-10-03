@@ -25,8 +25,6 @@ import { FormOfEducation } from '../../enums/form-of-education.enum';
 import { Semester } from '../../enums/semester.enum';
 import { Color } from '../../enums/color.enum';
 import { Country } from '../../enums/country.enum';
-import { Group } from '../../types/group.type';
-import { TuiStringMatcher } from '@taiga-ui/cdk';
 import { EditComponent } from '../edit.component/edit.component';
 
 @Component({
@@ -66,11 +64,13 @@ export class GroupListPageComponent {
   protected selectedRow = null;
 
   protected addRow() {
-    const newNumber = this.groups().length + this.draftGroups().length;
-
-    const draft: Group = {
-      number: newNumber,
-      name: '',
+    const nextId = this.draftGroups().length
+      ? Math.max(...this.draftGroups().map(d => d.draftId))
+      : 0;
+    const draft = {
+      draftId: nextId,
+      id: null,
+      name: 'default',
       coordinates: { x: 0, y: 0 },
       creationDate: new Date().toISOString(),
       studentsCount: 0,
@@ -78,13 +78,13 @@ export class GroupListPageComponent {
       transferredStudents: 0,
       formOfEducation: 0,
       shouldBeExpelled: 0,
-      semesterEnum: Semester.EIGHT,
+      semesterEnum: 0,
       groupAdmin: {
-        name: '',
+        name: 'default',
         height: 0,
-        eyeColor: null as any,
-        hairColor: null as any,
-        nationality: null as any,
+        eyeColor: 0,
+        hairColor: 0,
+        nationality: 0,
         location: { x: 0, y: 0, z: 0 },
       },
     };
@@ -94,27 +94,22 @@ export class GroupListPageComponent {
   }
 
   protected applyRows() {
-    //this.store$.dispatch(groupActions.create({ group: this.data[rowId - 1] }));
+    this.store$.dispatch(groupActions.create({ groups: this.selected.filter(g => !g.id) }));
   }
 
   protected removeRows() {
-    console.log(this.selected);
-  }
-
-  protected addButtonClicked() {
-    //this.store$.dispatch() кнопка добавления
+    const ids = this.selected
+      .map((g) => g.id)
+      .filter((id): id is number => id != null);
+    const draftIds = this.selected
+      .map((g) => g.draftId)
+      .filter((draftId) => draftId != null);
+    this.store$.dispatch(groupActions.delete({ ids, draftIds}));
   }
 
   protected editRow(row) {
-    console.log(row);
     this.selectedRow = row;
     this.showEditDialog = true;
-    this.store$.dispatch(groupActions.startEditDraft({ group: row }));
+    this.store$.dispatch(groupActions.startEdit({ group: row }));
   }
-
-
-
-  protected readonly matcher: TuiStringMatcher<string> = (item, query) => {
-    return item.toLowerCase().includes(query.toLowerCase());
-  };
 }

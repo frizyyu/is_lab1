@@ -1,7 +1,7 @@
  <div class="current-row">
     @if (currentRow(); as currentRow){
       <form [formGroup]="form" tuiForm class="form">
-        <span class="info-container">number: {{currentRow.number}}</span>
+        <span class="info-container">number: {{currentRow.id}}</span>
         <span class="info-container">name: <tui-input-inline class="inline-field">
       <input placeholder="_______________"
              formControlName="name"

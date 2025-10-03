@@ -4,7 +4,8 @@ import { Semester } from '../enums/semester.enum';
 import { Person } from './person.type';
 
 export type Group = {
-  number : number;
+  draftId: number;
+  id : number;
   name : string;
   coordinates: Coordinates;
   creationDate: any;
