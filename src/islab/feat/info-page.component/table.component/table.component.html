@@ -1,0 +1,167 @@
+<tui-scrollbar class="scrollbar">
+  <cdk-virtual-scroll-viewport
+    #viewport
+    appendOnly
+    tuiScrollable
+    class="viewport tui-zero-scrollbar"
+    [itemSize]="45"
+    [maxBufferPx]="500"
+    [minBufferPx]="400"
+  >
+    <table tuiTable class="table">
+      <thead>
+        <tr tuiThGroup>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            №
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Name
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Coordinates
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Creation Date
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Students
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Expelled
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Transferred
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Form
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Should Expel
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Semester
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Admin
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Eyes
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Hair
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Location
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Height
+          </th>
+          <th
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Nationality
+          </th>
+        </tr>
+      </thead>
+      <tbody tuiTbody>
+        @for (s of source(); track s.id) {
+        <tr tuiTr>
+          <td tuiTd>{{ s.id }}</td>
+          <td tuiTd>{{ s.name }}</td>
+          <td tuiTd>({{ s.coordinates.x }}, {{ s.coordinates.y }})</td>
+          <td tuiTd>
+            {{ s.creationDate | date : 'short' }}
+          </td>
+          <td tuiTd>{{ s.studentsCount }}</td>
+          <td tuiTd>{{ s.expelledStudents }}</td>
+          <td tuiTd>{{ s.transferredStudents }}</td>
+          <td tuiTd>{{ s.formOfEducation }}</td>
+          <td tuiTd>{{ s.shouldBeExpelled }}</td>
+          <td tuiTd>{{ s.semesterEnum }}</td>
+          <td tuiTd>
+            {{ s.groupAdmin?.name }}
+          </td>
+          <td tuiTd>
+            {{ s.groupAdmin?.eyeColor }}
+          </td>
+          <td tuiTd>
+            {{ s.groupAdmin?.hairColor }}
+          </td>
+          <td tuiTd>
+            ({{ s.groupAdmin?.location.x }}; {{ s.groupAdmin?.location.y }};
+            {{ s.groupAdmin?.location.z }})
+          </td>
+          <td tuiTd>
+            {{ s.groupAdmin?.height }}
+          </td>
+          <td tuiTd>
+            {{ s.groupAdmin?.nationality }}
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </cdk-virtual-scroll-viewport>
+</tui-scrollbar>

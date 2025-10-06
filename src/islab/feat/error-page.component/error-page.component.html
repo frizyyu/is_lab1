@@ -1,20 +1,14 @@
-@if (showLoader()) {
-  <app-loader [showLoader]="showLoader()"></app-loader>
-} @else {
-  <span tuiCardLarge>
-    <h3 class="tui-island__title">Внимание</h3>
-    <p class="tui-island__paragraph">
-      Возникла ошибка при обработке данных
-    </p>
-    <button
-      appearance="flat"
-      size="l"
-      tuiButton
-      type="button"
-      class="tui-island__footer-button"
-      (click)="reloadButtonClicked()"
-    >
-      Обновить
-    </button>
-  </span>
-}
+<span tuiCardLarge>
+  <h3 class="tui-island__title">Caution</h3>
+  <p class="tui-island__paragraph">Error occurred while data fetching</p>
+  <button
+    appearance="flat"
+    size="l"
+    tuiButton
+    type="button"
+    class="tui-island__footer-button"
+    (click)="backButtonClicked()"
+  >
+    Back
+  </button>
+</span>

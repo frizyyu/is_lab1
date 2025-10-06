@@ -1,7 +1,3 @@
-import { createSelector } from '@ngrx/store';
 import { groupFeature } from '../reducers/group.reducer';
 
-export const {
-  selectGroups,
-  selectDraftGroups,
-} = groupFeature;
+export const { selectGroups, selectDraftGroups, selectStats, selectSortNum } = groupFeature;

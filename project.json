@@ -1,31 +1,23 @@
 {
   "name": "front",
   "$schema": "node_modules/nx/schemas/project-schema.json",
-  "includedScripts": [],
   "projectType": "application",
+  "sourceRoot": "src",
   "prefix": "app",
-  "sourceRoot": "./src",
   "tags": [],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/front",
-        "index": "./src/index.html",
-        "main": "./src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "index": "src/index.html",
+        "main": "src/main.ts",
+        "polyfills": ["zone.js"],
         "tsConfig": "tsconfig.app.json",
         "inlineStyleLanguage": "less",
         "assets": [
-          {
-            "glob": "**/*",
-            "input": "public"
-          },
+          { "glob": "**/*", "input": "public" },
           {
             "glob": "**/*",
             "input": "node_modules/@taiga-ui/icons/src",
@@ -35,22 +27,14 @@
         "styles": [
           "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
           "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
-          "./src/styles.less"
+          "src/styles.less"
         ]
       },
       "configurations": {
         "production": {
           "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "4kb",
-              "maximumError": "8kb"
-            }
+            { "type": "initial", "maximumWarning": "500kb", "maximumError": "1mb" },
+            { "type": "anyComponentStyle", "maximumWarning": "4kb", "maximumError": "8kb" }
           ],
           "outputHashing": "all"
         },
@@ -66,39 +50,20 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "continuous": true,
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
-        "production": {
-          "buildTarget": "front:build:production"
-        },
-        "development": {
-          "buildTarget": "front:build:development"
-        }
+        "production": { "buildTarget": "front:build:production" },
+        "development": { "buildTarget": "front:build:development" }
       },
       "defaultConfiguration": "development"
-    },
-    "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
-      "options": {
-        "buildTarget": "front:build"
-      }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": [
-          "./src"
+          "src/**/*.ts",
+          "src/**/*.html"
         ]
-      }
-    },
-    "serve-static": {
-      "continuous": true,
-      "executor": "@nx/web:file-server",
-      "options": {
-        "buildTarget": "front:build",
-        "port": 4200,
-        "spa": true
       }
     }
   }

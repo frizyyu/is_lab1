@@ -1,0 +1,44 @@
+{
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": [
+        "plugin:@nx/typescript",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "eslint:recommended",
+        "prettier"
+      ],
+      "parserOptions": {
+        "project": ["tsconfig.base.json"],
+        "tsconfigRootDir": "."
+      },
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/array-type": ["warn", { "default": "array-simple" }],
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "eqeqeq": ["error", "smart"],
+        "curly": ["error", "all"],
+        "max-lines": ["warn", { "max": 400, "skipBlankLines": true, "skipComments": true }],
+        "max-params": ["warn", 5],
+        "complexity": ["warn", 12],
+        "import/order": "off",
+        "simple-import-sort/imports": "off",
+        "simple-import-sort/exports": "off"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        "@angular-eslint/template/no-any": "warn",
+        "@angular-eslint/template/eqeqeq": "error",
+        "@angular-eslint/template/attributes-order": "warn"
+      }
+    }
+  ]
+}

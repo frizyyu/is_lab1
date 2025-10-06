@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+RUN npm run lint
+RUN npm run format:check
 RUN npx nx build --configuration=production
 
 FROM nginx:alpine

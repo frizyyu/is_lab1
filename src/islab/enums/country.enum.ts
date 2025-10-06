@@ -1,5 +1,5 @@
 export enum Country {
-  RUSSIA,
-  GERMANY,
-  NORTH_KOREA,
+  RUSSIA = 'RUSSIA',
+  GERMANY = 'GERMANY',
+  NORTH_KOREA = 'NORTH_KOREA',
 }

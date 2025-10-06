@@ -1,4 +1,4 @@
-import { createActionGroup, emptyProps } from '@ngrx/store'
+import { createActionGroup, emptyProps } from '@ngrx/store';
 
 export const rootFeatureKey = 'root';
 

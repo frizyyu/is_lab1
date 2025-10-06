@@ -14,7 +14,7 @@ table {
   td {
     &:first-child {
       inline-size: 10rem;
-      font-wEIGHTH: bold;
+      font-weighth: bold;
     }
 
     &:last-child {
@@ -38,8 +38,51 @@ table {
 
 .button-container {
   display: flex;
+  flex-direction: column;
   width: 3.5rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   gap: 2rem;
+}
+
+.first-cell {
+  min-width: 2.5rem !important;
+}
+
+.table-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin: 12px 0 8px;
+
+  .filter-controls,
+  .sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .control {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    gap: 4px;
+
+    select,
+    input {
+      min-width: 200px;
+      padding: 6px 8px;
+    }
+  }
+
+  .sort-dir {
+    white-space: nowrap;
+  }
+}
+
+/* optional: keep table header on top of the toolbar margin */
+.table {
+  margin-top: 4px;
 }

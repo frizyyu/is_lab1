@@ -1,291 +1,295 @@
-@if (groups(); as groups) {
-  @if (groups) {
-    <tui-scrollbar class="scrollbar">
-      <cdk-virtual-scroll-viewport
-        #viewport
-        appendOnly
-        tuiScrollable
-        class="viewport tui-zero-scrollbar"
-        [itemSize]="45"
-        [maxBufferPx]="1000"
-        [minBufferPx]="700"
-      >
-    <table
-      tuiTable
-      class="table"
-      [(ngModel)]="selected"
-    >
+<button
+  appearance="flat"
+  size="l"
+  tuiButton
+  type="button"
+  class="tui-island__footer-button"
+  (click)="backButtonClicked()"
+>
+  Back
+</button>
+
+<div class="table-toolbar">
+  <div class="filter-controls">
+    <label class="control">
+      Filter column
+      <select [(ngModel)]="filter.key">
+        <option [ngValue]="''">— none —</option>
+        <option *ngFor="let o of stringColumnOptions" [ngValue]="o.key">
+          {{ o.label }}
+        </option>
+      </select>
+    </label>
+
+    <label class="control">
+      Exact value
+      <input [(ngModel)]="filter.value" placeholder="Enter exact value" />
+    </label>
+
+    <button tuiButton size="s" type="button" (click)="clearFilters()">Clear</button>
+  </div>
+</div>
+
+<tui-scrollbar class="scrollbar">
+  <cdk-virtual-scroll-viewport
+    #viewport
+    appendOnly
+    tuiScrollable
+    class="viewport tui-zero-scrollbar"
+    [itemSize]="45"
+    [maxBufferPx]="1000"
+    [minBufferPx]="700"
+  >
+    <table tuiTable class="table" [columns]="columns" [(ngModel)]="selected">
       <thead>
-      <tr tuiThGroup>
-        <th tuiTh
+        <tr tuiThGroup>
+          <th
+            *tuiHead="'select'"
+            tuiTh
+            class="first-cell"
             [sticky]="true"
             [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >
-          <input
-            tuiCheckbox
-            tuiCheckboxTable
-            type="checkbox"
-            size="m"
-          />
-          <div class="button-container">
-            <button
-              size="xs"
-              tuiButton
-              type="button"
-              class="remove-rows"
-              (click)="removeRows()"
-            >
+          ></th>
+
+          <th
+            *tuiHead="'id'"
+            tuiTh
+            [sorter]="sorterId"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            №
+          </th>
+
+          <th
+            *tuiHead="'name'"
+            tuiTh
+            [sorter]="sorterName"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Name
+          </th>
+
+          <th
+            *tuiHead="'coordinates'"
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Coordinates
+          </th>
+
+          <th
+            *tuiHead="'creationDate'"
+            tuiTh
+            [sorter]="sorterCreation"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Creation Date
+          </th>
+
+          <th
+            *tuiHead="'studentsCount'"
+            tuiTh
+            [sorter]="sorterStudents"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Students
+          </th>
+
+          <th
+            *tuiHead="'expelledStudents'"
+            tuiTh
+            [sorter]="sorterExpelled"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Expelled
+          </th>
+
+          <th
+            *tuiHead="'transferredStudents'"
+            tuiTh
+            [sorter]="sorterTransferred"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Transferred
+          </th>
+
+          <th
+            *tuiHead="'formOfEducation'"
+            tuiTh
+            [sorter]="sorterForm"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Form
+          </th>
+
+          <th
+            *tuiHead="'shouldBeExpelled'"
+            tuiTh
+            [sorter]="sorterShouldExpel"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Should Expel
+          </th>
+
+          <th
+            *tuiHead="'semesterEnum'"
+            tuiTh
+            [sorter]="sorterSemester"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Semester
+          </th>
+
+          <th
+            *tuiHead="'admin'"
+            tuiTh
+            [sorter]="sorterAdmin"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Admin
+          </th>
+
+          <th
+            *tuiHead="'eyeColor'"
+            tuiTh
+            [sorter]="sorterEye"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Eyes
+          </th>
+
+          <th
+            *tuiHead="'hairColor'"
+            tuiTh
+            [sorter]="sorterHair"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Hair
+          </th>
+
+          <th
+            *tuiHead="'location'"
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Location
+          </th>
+
+          <th
+            *tuiHead="'height'"
+            tuiTh
+            [sorter]="sorterHeight"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Height
+          </th>
+
+          <th
+            *tuiHead="'nationality'"
+            tuiTh
+            [sorter]="sorterNationality"
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          >
+            Nationality
+          </th>
+
+          <th
+            *tuiHead="'actions'"
+            tuiTh
+            [sticky]="true"
+            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
+          ></th>
+        </tr>
+      </thead>
+
+      <tbody tuiTbody>
+        <tr *cdkVirtualFor="let g of filteredRows() | tuiTableSort" tuiTr>
+          <td *tuiCell="'select'" tuiTd>
+            <button size="xs" tuiButton type="button" class="remove-rows" (click)="removeRows(g)">
               remove
             </button>
-            <button
-              size="xs"
-              tuiButton
-              type="button"
-              (click)="applyRows()"
-              class="apply-rows"
-            >
-              apply
+          </td>
+
+          <td *tuiCell="'id'" tuiTd>{{ g.id }}</td>
+
+          <td *tuiCell="'name'" tuiTd>{{ g.name }}</td>
+
+          <td *tuiCell="'coordinates'" tuiTd>({{ g.coordinates.x }}, {{ g.coordinates.y }})</td>
+
+          <td *tuiCell="'creationDate'" tuiTd>
+            {{ g.creationDate | date : 'short' }}
+          </td>
+
+          <td *tuiCell="'studentsCount'" tuiTd>{{ g.studentsCount }}</td>
+
+          <td *tuiCell="'expelledStudents'" tuiTd>{{ g.expelledStudents }}</td>
+
+          <td *tuiCell="'transferredStudents'" tuiTd>{{ g.transferredStudents }}</td>
+
+          <td *tuiCell="'formOfEducation'" tuiTd>{{ g.formOfEducation }}</td>
+
+          <td *tuiCell="'shouldBeExpelled'" tuiTd>{{ g.shouldBeExpelled }}</td>
+
+          <td *tuiCell="'semesterEnum'" tuiTd>{{ g.semesterEnum }}</td>
+
+          <td *tuiCell="'admin'" tuiTd>
+            {{ g.groupAdmin?.name }}
+          </td>
+
+          <td *tuiCell="'eyeColor'" tuiTd>
+            {{ g.groupAdmin?.eyeColor }}
+          </td>
+
+          <td *tuiCell="'hairColor'" tuiTd>
+            {{ g.groupAdmin?.hairColor }}
+          </td>
+
+          <td *tuiCell="'location'" tuiTd>
+            ({{ g.groupAdmin?.location.x }}; {{ g.groupAdmin?.location.y }};
+            {{ g.groupAdmin?.location.z }})
+          </td>
+
+          <td *tuiCell="'height'" tuiTd>
+            {{ g.groupAdmin?.height }}
+          </td>
+
+          <td *tuiCell="'nationality'" tuiTd>
+            {{ g.groupAdmin?.nationality }}
+          </td>
+
+          <td *tuiCell="'actions'" tuiTd>
+            <button size="xs" tuiButton type="button" (click)="editRow(g)" class="edit-row">
+              edit
             </button>
-          </div>
-        </th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >№</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Name</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Coordinates</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Creation Date</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Students</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Expelled</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Transferred</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Form</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Should Expel</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Semester</th>
-        <th
-          tuiTh
-            [sticky]="true"
-            [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Admin</th>
-        <th
-          tuiTh
-          [sticky]="true"
-          [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Eyes</th>
-        <th
-          tuiTh
-          [sticky]="true"
-          [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Hair</th>
-        <th
-          tuiTh
-          [sticky]="true"
-          [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Location</th>
-        <th
-          tuiTh
-          [sticky]="true"
-          [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Height</th>
-        <th
-          tuiTh
-          [sticky]="true"
-          [style.top.px]="-(viewport.getOffsetToRenderedContentStart() || 0)"
-        >Nationality</th>
-      </tr>
-      </thead>
-      <tbody
-        tuiTbody
-      >
-        @for (g of groups; track g.id) {
-          <tr tuiTr>
-            <td tuiTd>
-              <input
-                tuiCheckbox
-                type="checkbox"
-                size="m"
-                [tuiCheckboxRow]="g"
-              />
-            </td>
-            <td tuiTd>{{ g.id }}</td>
-            <td tuiTd>{{ g.name }}</td>
-            <td tuiTd>
-              ({{ g.coordinates.x }}, {{ g.coordinates.y }})
-            </td>
-            <td tuiTd>
-              {{ g.creationDate | date:'short' }}
-            </td>
-            <td tuiTd>{{ g.studentsCount }}</td>
-            <td tuiTd>{{ g.expelledStudents }}</td>
-            <td tuiTd>{{ g.transferredStudents }}</td>
-            <td tuiTd>{{ g.formOfEducation }}</td>
-            <td tuiTd>{{ g.shouldBeExpelled }}</td>
-            <td tuiTd>{{ g.semesterEnum }}</td>
-            <td tuiTd>
-              {{ g.groupAdmin?.name }}
-            </td>
-            <td tuiTd>
-              {{ g.groupAdmin?.eyeColor }}
-            </td>
-            <td tuiTd>
-              {{ g.groupAdmin?.hairColor }}
-            </td>
-            <td tuiTd>
-              ({{ g.groupAdmin?.location.x }}; {{ g.groupAdmin?.location.y }}; {{ g.groupAdmin?.location.z }})
-            </td>
-            <td tuiTd>
-              {{ g.groupAdmin?.height }}
-            </td>
-            <td tuiTd>
-              {{ g.groupAdmin?.nationality }}
-            </td>
-
-            <td tuiTd>
-              <button
-                size="xs"
-                tuiButton
-                type="button"
-                (click)="editRow(g)"
-                class="edit-row"
-              >
-                edit
-              </button>
-            </td>
-          </tr>
-        }
-        @for (dg of draftGroups(); track dg) {
-          <tr tuiTr>
-            <td tuiTd>
-              <input
-                tuiCheckbox
-                type="checkbox"
-                size="m"
-                [tuiCheckboxRow]="dg"
-              />
-            </td>
-            <td tuiTd>{{ dg.id }}</td>
-            <td tuiTd>{{ dg.name }}</td>
-            <td tuiTd>
-              ({{ dg.coordinates.x }}, {{ dg.coordinates.y }})
-            </td>
-            <td tuiTd>
-              {{ dg.creationDate | date:'short' }}
-            </td>
-            <td tuiTd>{{ dg.studentsCount }}</td>
-            <td tuiTd>{{ dg.expelledStudents }}</td>
-            <td tuiTd>{{ dg.transferredStudents }}</td>
-            <td tuiTd>{{ dg.formOfEducation }}</td>
-            <td tuiTd>{{ dg.shouldBeExpelled }}</td>
-            <td tuiTd>{{ dg.semesterEnum }}</td>
-            <td tuiTd>
-              {{ dg.groupAdmin?.name }}
-            </td>
-            <td tuiTd>
-              {{ dg.groupAdmin?.eyeColor }}
-            </td>
-            <td tuiTd>
-              {{ dg.groupAdmin?.hairColor }}
-            </td>
-            <td tuiTd>
-              ({{ dg.groupAdmin?.location.x }}; {{ dg.groupAdmin?.location.y }}; {{ dg.groupAdmin?.location.z }})
-            </td>
-            <td tuiTd>
-              {{ dg.groupAdmin?.height }}
-            </td>
-            <td tuiTd>
-              {{ dg.groupAdmin?.nationality }}
-            </td>
-
-            <td tuiTd>
-              <button
-                size="xs"
-                tuiButton
-                type="button"
-                (click)="editRow(dg)"
-                class="edit-row"
-              >
-                edit
-              </button>
-            </td>
-          </tr>
-        }
+          </td>
+        </tr>
       </tbody>
     </table>
-        <button
-          size="s"
-          tuiButton
-          type="button"
-          (click)="addRow()"
-          class="add-row"
-        >
-          add
-        </button>
-      </cdk-virtual-scroll-viewport>
-    </tui-scrollbar>
-  } @else {
-    <span tuiCardLarge>
-    <h3 class="tui-island__title">Внимание</h3>
-    <p class="tui-island__paragraph">
-      Вы не добавили групп
-    </p>
-    <button
-      appearance="flat"
-      size="l"
-      tuiButton
-      type="button"
-      class="tui-island__footer-button"
-      (click)="addRow()"
-    >
-      Добавить
-    </button>
-  </span>
-  }
-  <ng-template
-    [tuiDialogOptions]="{ label: 'Edit group', size: 'm' }"
-    [(tuiDialog)]="showEditDialog"
-    class="edit-dialog"
-  >
-    <app-edit
-      [currentRow]="selectedRow"
-      (closed)="showEditDialog = false"
-    ></app-edit>
-  </ng-template>
-} @else {
-  <app-error-page/>
-}
+
+    <button size="s" tuiButton type="button" (click)="addRow()" class="add-row">add</button>
+  </cdk-virtual-scroll-viewport>
+</tui-scrollbar>
+
+<ng-template
+  [tuiDialogOptions]="{ label: 'Edit group', size: 'm' }"
+  [(tuiDialog)]="showEditDialog"
+  class="edit-dialog"
+>
+  <app-edit [currentRow]="selectedRow" (closed)="showEditDialog = false"></app-edit>
+</ng-template>

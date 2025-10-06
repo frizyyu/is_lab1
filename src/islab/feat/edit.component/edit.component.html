@@ -1,143 +1,255 @@
- <div class="current-row">
-    @if (currentRow(); as currentRow){
-      <form [formGroup]="form" tuiForm class="form">
-        <span class="info-container">number: {{currentRow.id}}</span>
-        <span class="info-container">name: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="name"
-             [ngModel]="currentRow.name"
-      />
-    </tui-input-inline>
+<div class="current-row">
+  @if (currentRow(); as currentRow) {
+  <form [formGroup]="form" tuiForm class="form">
+    <span class="info-container">
+      name:
+      <tui-input-inline class="inline-field">
+        <input placeholder="_______________" formControlName="name" [ngModel]="currentRow.name" />
+      </tui-input-inline>
+      @if (isInvalid('name')) {
+      <div class="error">{{ getError('name') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      coordinates: (<tui-input-inline class="inline-field_small">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="x"
+          [ngModel]="currentRow.coordinates.x"
+        /> </tui-input-inline
+      >;
+      <tui-input-inline class="inline-field_small">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="y"
+          [ngModel]="currentRow.coordinates.y"
+        /> </tui-input-inline
+      >) @if (isInvalid('x')) {
+      <div class="error">{{ getError('x') }}</div>
+      } @if (isInvalid('y')) {
+      <div class="error">{{ getError('y') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      studentsCount:
+      <tui-input-inline class="inline-field">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="studentsCount"
+          [ngModel]="currentRow.studentsCount"
+        />
+      </tui-input-inline>
+      @if (isInvalid('studentsCount')) {
+      <div class="error">{{ getError('studentsCount') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      expelledStudents:
+      <tui-input-inline class="inline-field">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="expelledStudents"
+          [ngModel]="currentRow.expelledStudents"
+        />
+      </tui-input-inline>
+      @if (isInvalid('expelledStudents')) {
+      <div class="error">{{ getError('expelledStudents') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      transferredStudents:
+      <tui-input-inline class="inline-field">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="transferredStudents"
+          [ngModel]="currentRow.transferredStudents"
+        />
+      </tui-input-inline>
+      @if (isInvalid('transferredStudents')) {
+      <div class="error">{{ getError('transferredStudents') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      formOfEducation:
+      <tui-textfield class="text-field" tuiChevron>
+        <select
+          placeholder="Choose"
+          tuiSelect
+          formControlName="formOfEducation"
+          [items]="formOfEducation"
+          [ngModel]="currentRow.formOfEducation"
+        ></select>
+      </tui-textfield>
+      @if (isInvalid('formOfEducation')) {
+      <div class="error">{{ getError('formOfEducation') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      shouldBeExpelled:
+      <tui-input-inline class="inline-field">
+        <input
+          type="number"
+          placeholder="_______________"
+          formControlName="shouldBeExpelled"
+          [ngModel]="currentRow.shouldBeExpelled"
+        />
+      </tui-input-inline>
+      @if (isInvalid('shouldBeExpelled')) {
+      <div class="error">{{ getError('shouldBeExpelled') }}</div>
+      }
+    </span>
+
+    <span class="info-container">
+      semesterEnum:
+      <tui-textfield class="text-field" tuiChevron>
+        <select
+          placeholder="Choose"
+          tuiSelect
+          formControlName="semesterEnum"
+          [items]="semesterEnum"
+          [ngModel]="currentRow.semesterEnum"
+        ></select>
+      </tui-textfield>
+      @if (isInvalid('semesterEnum')) {
+      <div class="error">{{ getError('semesterEnum') }}</div>
+      }
+    </span>
+
+    <span class="info-container">groupAdmin:</span>
+    <span class="tab">
+      <span class="info-container">
+        name:
+        <tui-input-inline class="inline-field">
+          <input
+            placeholder="_______________"
+            formControlName="groupAdminName"
+            [ngModel]="currentRow.groupAdmin.name"
+          />
+        </tui-input-inline>
+        @if (isInvalid('groupAdminName')) {
+        <div class="error">{{ getError('groupAdminName') }}</div>
+        }
       </span>
-        <span class="info-container">coordinates: (<tui-input-inline class="inline-field_small">
-      <input placeholder="_______________"
-             formControlName="x"
-             [ngModel]="currentRow.coordinates.x"
-      />
-    </tui-input-inline>; <tui-input-inline class="inline-field_small">
-      <input placeholder="_______________"
-             formControlName="y"
-             [ngModel]="currentRow.coordinates.y"
-      />
-    </tui-input-inline>)</span>
-        <span class="info-container">creation date: {{currentRow.creationDate | date:'short' }}</span>
-        <span class="info-container">studentsCount: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="studentsCount"
-             [ngModel]="currentRow.studentsCount"
-      />
-    </tui-input-inline></span>
-        <span class="info-container">expelledStudents: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="expelledStudents"
-             [ngModel]="currentRow.expelledStudents"
-      />
-    </tui-input-inline></span>
-        <span class="info-container">transferredStudents: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="transferredStudents"
-             [ngModel]="currentRow.transferredStudents"
-      />
-    </tui-input-inline></span>
-        <span class="info-container">formOfEducation: <tui-textfield class="text-field"
-          tuiChevron
-        >
-          <select
-            placeholder="Choose"
-            tuiSelect
-            formControlName="formOfEducation"
-            [items]="formOfEducation"
-            [ngModel]="formOfEducation[currentRow.formOfEducation]"
-          ></select></tui-textfield></span>
-        <span class="info-container">shouldBeExpelled: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="shouldBeExpelled"
-             [ngModel]="currentRow.shouldBeExpelled"
-      />
-    </tui-input-inline></span>
-        <span class="info-container">semesterEnum: <tui-textfield class="text-field"
-          tuiChevron
-        >
-          <select
-            placeholder="Choose"
-            tuiSelect
-            formControlName="semesterEnum"
-            [items]="semesterEnum"
-            [ngModel]="semesterEnum[currentRow.semesterEnum]"
-          ></select></tui-textfield></span>
-        <span class="info-container">groupAdmin: </span>
-        <span class="tab">
-      <span class="info-container">name: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="groupAdminName"
-             [ngModel]="currentRow.groupAdmin.name"
-      />
-    </tui-input-inline></span>
-      <span class="info-container">eyeColor: <tui-textfield class="text-field"
-        tuiChevron
-      >
+
+      <span class="info-container">
+        eyeColor:
+        <tui-textfield class="text-field" tuiChevron>
           <select
             placeholder="Choose"
             tuiSelect
             formControlName="eyeColor"
             [items]="eyeColor"
-            [ngModel]="eyeColor[currentRow.groupAdmin.eyeColor]"
-          ></select></tui-textfield></span>
-      <span class="info-container">hairColor:
-        <tui-textfield class="text-field"
-          tuiChevron
-        >
+            [ngModel]="currentRow.groupAdmin.eyeColor"
+          ></select>
+        </tui-textfield>
+        @if (isInvalid('eyeColor')) {
+        <div class="error">{{ getError('eyeColor') }}</div>
+        }
+      </span>
+
+      <span class="info-container">
+        hairColor:
+        <tui-textfield class="text-field" tuiChevron>
           <select
             placeholder="Choose"
             tuiSelect
             formControlName="hairColor"
             [items]="hairColor"
-            (ngModel)="hairColor[currentRow.groupAdmin.hairColor]"
-          ></select></tui-textfield></span>
-      <span class="info-container">location: (<tui-input-inline class="inline-field_small">
-      <input placeholder="_______________"
-             formControlName="locationX"
-             [ngModel]="currentRow.groupAdmin.location.x"
-      />
-    </tui-input-inline>; <tui-input-inline class="inline-field_small">
-      <input placeholder="_______________"
-             formControlName="locationY"
-             [ngModel]="currentRow.groupAdmin.location.y"
-      />
-    </tui-input-inline>; <tui-input-inline class="inline-field_small">
-      <input placeholder="_______________"
-             formControlName="locationZ"
-             [ngModel]="currentRow.groupAdmin.location.z"
-      />
-    </tui-input-inline>)</span>
-      <span class="info-container">height: <tui-input-inline class="inline-field">
-      <input placeholder="_______________"
-             formControlName="height"
-             [ngModel]="currentRow.groupAdmin.height"
-      />
-    </tui-input-inline></span>
-      <span class="info-container">nationality: <tui-textfield class="text-field"
-        tuiChevron
-      >
+            [ngModel]="currentRow.groupAdmin.hairColor"
+          ></select>
+        </tui-textfield>
+        @if (isInvalid('hairColor')) {
+        <div class="error">{{ getError('hairColor') }}</div>
+        }
+      </span>
+
+      <span class="info-container">
+        location: (<tui-input-inline class="inline-field_small">
+          <input
+            type="number"
+            placeholder="_______________"
+            formControlName="locationX"
+            [ngModel]="currentRow.groupAdmin.location.x"
+          /> </tui-input-inline
+        >;
+        <tui-input-inline class="inline-field_small">
+          <input
+            type="number"
+            placeholder="_______________"
+            formControlName="locationY"
+            [ngModel]="currentRow.groupAdmin.location.y"
+          /> </tui-input-inline
+        >;
+        <tui-input-inline class="inline-field_small">
+          <input
+            type="number"
+            placeholder="_______________"
+            formControlName="locationZ"
+            [ngModel]="currentRow.groupAdmin.location.z"
+          /> </tui-input-inline
+        >) @if (isInvalid('locationX')) {
+        <div class="error">{{ getError('locationX') }}</div>
+        } @if (isInvalid('locationY')) {
+        <div class="error">{{ getError('locationY') }}</div>
+        } @if (isInvalid('locationZ')) {
+        <div class="error">{{ getError('locationZ') }}</div>
+        }
+      </span>
+
+      <span class="info-container">
+        height:
+        <tui-input-inline class="inline-field">
+          <input
+            type="number"
+            placeholder="_______________"
+            formControlName="height"
+            [ngModel]="currentRow.groupAdmin.height"
+          />
+        </tui-input-inline>
+        @if (isInvalid('height')) {
+        <div class="error">{{ getError('height') }}</div>
+        }
+      </span>
+
+      <span class="info-container">
+        nationality:
+        <tui-textfield class="text-field" tuiChevron>
           <select
             placeholder="Choose"
             tuiSelect
             formControlName="nationality"
             [items]="nationality"
-            [ngModel]="nationality[currentRow.groupAdmin.nationality]"
-          ></select></tui-textfield></span>
+            [ngModel]="currentRow.groupAdmin.nationality"
+          ></select>
+        </tui-textfield>
+        @if (isInvalid('nationality')) {
+        <div class="error">{{ getError('nationality') }}</div>
+        }
+      </span>
     </span>
-        <div class="actions">
-          <button
-            tuiButton
-            type="button"
-            (click)="applyChangesClicked()"
-            [disabled]="form.invalid || !form.dirty"
-            appearance="primary"
-          >
-            Apply
-          </button>
-        </div>
-      </form>
-    }
-  </div>
+
+    <div class="actions">
+      <button
+        tuiButton
+        type="button"
+        (click)="currentRow.id ? updateGroup() : createNewGroup()"
+        [disabled]="form.invalid"
+        appearance="primary"
+      >
+        {{ currentRow.id ? 'update' : 'create' }}
+      </button>
+    </div>
+  </form>
+  }
+</div>

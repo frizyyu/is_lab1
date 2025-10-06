@@ -2,58 +2,23 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Group } from '../types/group.type';
-import { catchError, EMPTY, Observable, of, throwError } from 'rxjs';
-import { FormOfEducation } from '../enums/form-of-education.enum';
-import { Semester } from '../enums/semester.enum';
-import { Color } from '../enums/color.enum';
-import { Country } from '../enums/country.enum';
+import { catchError, EMPTY, map, Observable, of, throwError } from 'rxjs';
 import { mapGroupsToBackendDto } from '../utils/dto-mappers';
+import { AvgShouldResp } from '../types/avg-should-resp.type';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly base = environment.API_BASE;
-  private readonly http = inject(HttpClient)
-
-  //впадлу мокать, я так захардкодил :)
-  /*public getGroups() {
-    const groups: Group[] = [
-      {
-        number: 1,
-        name: 'qq',
-        coordinates: {
-          x: 2,
-          y: 3,
-        },
-        creationDate: undefined,
-        studentsCount: 4,
-        expelledStudents: 5,
-        transferredStudents: 6,
-        formOfEducation: FormOfEducation.DISTANCE_EDUCATION,
-        shouldBeExpelled: 7,
-        semesterEnum: Semester.EIGHTH,
-        groupAdmin: {
-          name: 'qqq',
-          eyeColor: Color.BLUE,
-          hairColor: Color.BLACK,
-          location: {
-            x: 8,
-            y: 9,
-            z: 10,
-          },
-          height: 8,
-          nationality: Country.RUSSIA,
-        },
-      },
-    ];
-
-    return of<Group[]>(groups);
-  }*/
+  private readonly http = inject(HttpClient);
 
   public getGroups() {
-    return this.http.get<Group[]>(`${this.base}/groups`)
-      .pipe(catchError((error: HttpErrorResponse) =>
-        error.status === 421 ? throwError(error) : EMPTY
-      ));
+    return this.http
+      .get<Group[]>(`${this.base}/groups`)
+      .pipe(
+        catchError((error: HttpErrorResponse) =>
+          error.status === 421 ? throwError(error) : EMPTY,
+        ),
+      );
   }
 
   public createGroups(groups: Group[]): Observable<Group[]> {
@@ -64,5 +29,43 @@ export class ApiService {
     return this.http.request<void>('DELETE', `${this.base}/groups/batch`, {
       body: ids,
     });
+  }
+
+  public updateGroups(groups: Group[]): Observable<Group[]> {
+    return this.http.put<Group[]>(`${this.base}/groups/batch`, mapGroupsToBackendDto(groups));
+  }
+
+  public getAvgShouldBeExpelled() {
+    return this.http.get<AvgShouldResp>(`${this.base}/groups/stats/avg-should-be-expelled`).pipe(
+      map((r) => r?.avgShouldBeExpelled ?? null),
+      catchError(() => of(null)),
+    );
+  }
+
+  public getMinByExpelledStudents() {
+    return this.http
+      .get<Group | null>(`${this.base}/groups/stats/min-expelled-students`, { observe: 'body' })
+      .pipe(
+        map((g) => g ?? null),
+        catchError(() => of(null)),
+      );
+  }
+
+  public expelAllStudents(id: number) {
+    return this.http
+      .put<Group>(`${this.base}/groups/${id}/expel-all`, {}, { observe: 'body' })
+      .pipe(catchError((error) => throwError(() => error)));
+  }
+
+  public addStudent(id: number) {
+    return this.http
+      .put<Group>(`${this.base}/groups/${id}/add-student`, {}, { observe: 'body' })
+      .pipe(catchError((error) => throwError(() => error)));
+  }
+
+  public getGroupsByAdminHeightGreater(min: number) {
+    return this.http
+      .get<Group[]>(`${this.base}/groups/stats/admin-height-greater/${min}`)
+      .pipe(catchError(() => of([])));
   }
 }

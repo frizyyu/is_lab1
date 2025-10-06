@@ -1,6 +1,6 @@
 export enum Semester {
-  FIRST,
-  THIRD,
-  FOURTH,
-  EIGHTH,
+  FIRST = 'FIRST',
+  THIRD = 'THIRD',
+  FOURTH = 'FOURTH',
+  EIGHTH = 'EIGHTH',
 }

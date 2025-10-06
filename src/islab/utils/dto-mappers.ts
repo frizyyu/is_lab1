@@ -13,7 +13,7 @@ function enumToName<T extends EnumLike>(e: T, value: number | string | undefined
 
 export function mapGroupToBackendDto(g: Group) {
   return {
-    number: g.id,
+    id: g.id,
     name: g.name,
     coordinates: {
       x: g.coordinates?.x ?? null,
@@ -30,19 +30,19 @@ export function mapGroupToBackendDto(g: Group) {
 
     groupAdmin: g.groupAdmin
       ? {
-        name: g.groupAdmin.name ?? null,
-        height: g.groupAdmin.height ?? null,
-        eyeColor: enumToName(Color, g.groupAdmin.eyeColor),
-        hairColor: enumToName(Color, g.groupAdmin.hairColor),
-        nationality: enumToName(Country, g.groupAdmin.nationality),
-        location: g.groupAdmin.location
-          ? {
-            x: g.groupAdmin.location.x ?? null,
-            y: g.groupAdmin.location.y ?? null,
-            z: g.groupAdmin.location.z ?? null,
-          }
-          : null,
-      }
+          name: g.groupAdmin.name ?? null,
+          height: g.groupAdmin.height ?? null,
+          eyeColor: enumToName(Color, g.groupAdmin.eyeColor),
+          hairColor: enumToName(Color, g.groupAdmin.hairColor),
+          nationality: enumToName(Country, g.groupAdmin.nationality),
+          location: g.groupAdmin.location
+            ? {
+                x: g.groupAdmin.location.x ?? null,
+                y: g.groupAdmin.location.y ?? null,
+                z: g.groupAdmin.location.z ?? null,
+              }
+            : null,
+        }
       : null,
   };
 }

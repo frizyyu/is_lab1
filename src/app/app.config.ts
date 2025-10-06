@@ -1,5 +1,5 @@
-import { provideEventPlugins } from "@taiga-ui/event-plugins";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideEventPlugins } from '@taiga-ui/event-plugins';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   ApplicationConfig,
   isDevMode,
@@ -17,18 +17,16 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import * as allEffects from '../state/effects';
 
 function collectFunctionalEffects(ns: Record<string, unknown>) {
-  return Object.fromEntries(
-    Object.entries(ns)
-  ) as Record<string, FunctionalEffect>;
+  return Object.fromEntries(Object.entries(ns)) as Record<string, FunctionalEffect>;
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
-        provideAnimations(),
-        provideBrowserGlobalErrorListeners(),
+    provideAnimations(),
+    provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
-        provideEventPlugins(),
+    provideEventPlugins(),
     provideHttpClient(),
 
     provideStore(),
@@ -38,12 +36,12 @@ export const appConfig: ApplicationConfig = {
 
     provideStoreDevtools({
       maxAge: 25,
-      logOnly: !isDevMode(),     // в проде только просмотр
-      trace: true,               // показать stacktrace диспатча
+      logOnly: !isDevMode(), // в проде только просмотр
+      trace: true, // показать stacktrace диспатча
       traceLimit: 25,
       // Можно санитайзеры, если состояние большое/не сериализуемое:
       // actionSanitizer: (a) => a,
       // stateSanitizer: (s) => s,
     }),
-    ],
+  ],
 };

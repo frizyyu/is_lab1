@@ -5,10 +5,10 @@ import { Person } from './person.type';
 
 export type Group = {
   draftId: number;
-  id : number;
-  name : string;
+  id: number;
+  name: string;
   coordinates: Coordinates;
-  creationDate: any;
+  creationDate: Date;
   studentsCount: number;
   expelledStudents: number;
   transferredStudents: number;
@@ -16,4 +16,4 @@ export type Group = {
   shouldBeExpelled: number;
   semesterEnum: Semester;
   groupAdmin: Person;
-}
+};

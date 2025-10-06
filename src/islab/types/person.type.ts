@@ -9,4 +9,4 @@ export type Person = {
   location: Location;
   height: number;
   nationality: Country;
-}
+};

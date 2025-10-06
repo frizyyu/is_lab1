@@ -11,7 +11,8 @@ export const isInteger: ValidatorFn = (c: AbstractControl): ValidationErrors | n
   return Number.isInteger(Number(v)) ? null : { integer: true };
 };
 
-export const greaterThan = (minExclusive: number): ValidatorFn =>
+export const greaterThan =
+  (minExclusive: number): ValidatorFn =>
   (c: AbstractControl): ValidationErrors | null => {
     const v = c.value;
     if (v == null || v === '') return null;

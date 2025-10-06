@@ -7,6 +7,14 @@ export const groupFeatureKey = 'group';
 export const groupActions = createActionGroup({
   source: groupFeatureKey,
   events: {
+    autoUpdate: props<{
+      groups: Group[];
+      avgShouldBeExpelled: number | null;
+      minByExpelled: Group | null;
+      minByAdmin: Group[] | null;
+    }>(),
+    autoUpdateFailed: emptyProps(),
+
     load: emptyProps(),
     loadSuccess: props<{ groups: Group[] }>(),
     loadFailed: props<{ error: unknown }>(),
@@ -16,16 +24,29 @@ export const groupActions = createActionGroup({
     createFailed: props<{ error: HttpErrorResponse | unknown }>(),
     createDraft: props<{ group: Group }>(),
 
-    startEdit: props<{group: Group}>(),
+    startEdit: props<{ group: Group }>(),
     endEdit: props<{ group: Group }>(),
 
-    update: props<{ id: number; changes: Omit<Group, 'id'> }>(),
-    updateSuccess: props<{ group: Group }>(),
+    update: props<{ groups: Group[] }>(),
+    updateSuccess: props<{ groups: Group[] }>(),
     updateFailed: props<{ error: unknown }>(),
-    startUpdate: props<{group: Group}>(),
 
-    delete: props<{ ids: number[], draftIds: number[] }>(),
-    deleteSuccess: props<{ ids: number[], draftIds: number[] }>(),
+    delete: props<{ ids: number[]; draftIds: number[] }>(),
+    deleteSuccess: props<{ ids: number[]; draftIds: number[] }>(),
     deleteFailed: props<{ error: HttpErrorResponse | unknown }>(),
+
+    loadStatsRequired: props<{ min: number }>(),
+    loadStatsFetched: props<{
+      groups: Group[];
+      avgShouldBeExpelled: number | null;
+      minByExpelled: Group | null;
+      minByAdmin: Group[] | null;
+    }>(),
+    loadStatsFetchFailed: emptyProps(),
+
+    expelButtonClicked: props<{ groupNum: number }>(),
+    addStudentButtonClicked: props<{ groupNum: number }>(),
+    groupsSortedByAdminRequired: props<{ min: number }>(),
+    groupsSortedByAdminFetched: props<{ groups: Group[] }>(),
   },
 });

@@ -6,7 +6,7 @@ import { routerActions } from '../actions/router.actions';
 
 export const initialRootState: RootState = {
   showLoader: true,
-}
+};
 
 export const rootFeature = createFeature({
   name: rootFeatureKey,
@@ -16,17 +16,18 @@ export const rootFeature = createFeature({
       rootActions.applicationStart,
       routerActions.navigateToGroupListPage,
       routerActions.navigateToErrorPage,
+      routerActions.navigateToStatsPage,
       (state): RootState => ({
         ...state,
         showLoader: false,
-      })
+      }),
     ),
     on(
       groupActions.load,
       (state): RootState => ({
         ...state,
         showLoader: true,
-      })
+      }),
     ),
   ),
 });

@@ -1,0 +1,40 @@
+<button appearance="flat" size="l" tuiButton type="button" (click)="backButtonClicked()">
+  Back
+</button>
+@if (groupIds().length > 0) {
+<div class="stats">
+  <form [formGroup]="form" tuiForm class="form">
+    <span>
+      Number for greater than:
+      <tui-input-inline class="inline-field">
+        <input placeholder="_______________" formControlName="num" [ngModel]="0" />
+      </tui-input-inline>
+    </span>
+    <span>
+      Choose group for buttons
+      <tui-textfield class="text-field" tuiChevron>
+        <select
+          placeholder="Choose"
+          tuiSelect
+          formControlName="groupNum"
+          [items]="groupIds()"
+          [ngModel]="groupIds()[0]"
+        ></select
+      ></tui-textfield>
+    </span>
+    <div class="buttonContainer">
+      <button tuiButton (click)="expellAllFromGroup()">Expel all from group</button>
+      <button tuiButton (click)="addStudentInGroup()">Add student into group</button>
+    </div>
+  </form>
+  <span>shouldBeExpelled avg: {{ stats().avgShouldBeExpelled }}</span>
+  <span>Minimal by expelledStudents</span>
+  <app-table [source]="[stats().minByExpelled]" />
+  <span
+    >greater than groupAdmin
+    <app-table [source]="stats().minByAdmin" />
+  </span>
+</div>
+} @else {
+<span>Group list is empty</span>
+}

@@ -1,36 +1,46 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { rootActions } from '../actions/root.actions';
-import {
-  catchError,
-  defaultIfEmpty,
-  EMPTY,
-  filter,
-  interval,
-  map,
-  mergeMap,
-  of,
-  startWith,
-  switchMap,
-  take,
-  takeUntil,
-  timer,
-} from 'rxjs';
-import { ApiService } from '../../islab/api/api.service';
-import { groupActions } from '../actions/group.actions';
+import { map, tap } from 'rxjs';
 import { routerActions } from '../actions/router.actions';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 export const onNavigateToGroupListPage$ = createEffect(
-  (
-    actions$ = inject(Actions),
-    router$ = inject(Router),
-  ) => {
+  (actions$ = inject(Actions), router$ = inject(Router)) => {
     return actions$.pipe(
       ofType(routerActions.navigateToGroupListPage),
-      map(() => router$.navigate(['/groups'], { skipLocationChange: true })),
+      map(() => router$.navigate(['/groups'])),
     );
   },
-  {functional: true, dispatch: false}
+  { functional: true, dispatch: false },
 );
 
+export const onNavigateBack$ = createEffect(
+  (actions$ = inject(Actions), location = inject(Location)) => {
+    return actions$.pipe(
+      ofType(routerActions.navigateBack),
+      tap(() => location.back()),
+    );
+  },
+  { functional: true, dispatch: false },
+);
+
+export const onNavigateToStatsPage$ = createEffect(
+  (actions$ = inject(Actions), router$ = inject(Router)) => {
+    return actions$.pipe(
+      ofType(routerActions.navigateToStatsPage),
+      map(() => router$.navigate(['/stats'])),
+    );
+  },
+  { functional: true, dispatch: false },
+);
+
+export const onNavigateToErrosPage$ = createEffect(
+  (actions$ = inject(Actions), router$ = inject(Router)) => {
+    return actions$.pipe(
+      ofType(routerActions.navigateToErrorPage),
+      map(() => router$.navigate(['/error'])),
+    );
+  },
+  { functional: true, dispatch: false },
+);

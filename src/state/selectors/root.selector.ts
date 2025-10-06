@@ -1,5 +1,3 @@
 import { rootFeature } from '../reducers/root.reducer';
 
-export const {
-  selectShowLoader,
-} = rootFeature;
+export const { selectShowLoader } = rootFeature;

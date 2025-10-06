@@ -15,7 +15,7 @@
 .inline-field {
   min-width: 12rem;
   &_small {
-    min-width: 0.5rem;
+    min-width: 1.5rem;
   }
   max-width: 15rem;
 }
@@ -38,4 +38,15 @@ input {
 .actions {
   display: flex;
   justify-content: center;
+}
+
+.error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: #ff4d4f;
 }
