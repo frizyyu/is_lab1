@@ -1,0 +1,26 @@
+style:
+  MagicNumber:
+    active: true
+    ignoreNumbers: ["0", "1", "2", "-1"]
+    ignorePropertyDeclaration: true
+    ignoreConstantDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreEnums: true
+    ignoreAnnotation: true
+    ignoreNamedArgument: true
+
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+
+  WildcardImport:
+    active: true
+
+formatting:
+  active: true
+  FinalNewline:
+    active: true
+  NoWildcardImports:
+    active: true
+  Indentation:
+    active: true

@@ -1,0 +1,15 @@
+micronaut:
+  application:
+    name: backend
+  data:
+    jdbc:
+      schema-generate: CREATE
+      dialect: POSTGRES
+
+datasources:
+  default:
+    url: ${DATASOURCES_DEFAULT_URL:`jdbc:postgresql://localhost:5432/lab1db`}
+    driverClassName: org.postgresql.Driver
+    username: ${DATASOURCES_DEFAULT_USERNAME:`user`}
+    password: ${DATASOURCES_DEFAULT_PASSWORD:`password`}
+    dialect: POSTGRES

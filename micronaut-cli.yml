@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.isproj
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [ app-name, data, data-jdbc, gradle, hibernate-validator, http-client-test, jackson-databind, jackson-xml, jdbc-hikari, junit, kotlin, kotlin-application, ksp, logback, management, micrometer, micrometer-annotation, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, postgres, properties, readme, serialization-jackson, shade, static-resources, test-resources ]
