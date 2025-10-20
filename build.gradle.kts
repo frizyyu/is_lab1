@@ -39,6 +39,13 @@ dependencies {
     implementation("io.micronaut:micronaut-management")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
 
+    implementation("io.micronaut:micronaut-websocket")
+
+    implementation(platform("io.micronaut.reactor:micronaut-reactor-bom:3.8.0"))
+    implementation("io.micronaut.reactor:micronaut-reactor")
+
+    implementation("io.micrometer:context-propagation")
+
     implementation("io.micronaut.data:micronaut-data-jdbc")
     ksp("io.micronaut.data:micronaut-data-processor")
     ksp("io.micronaut.serde:micronaut-serde-processor")

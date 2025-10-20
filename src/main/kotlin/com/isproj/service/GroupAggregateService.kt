@@ -9,15 +9,21 @@ import com.isproj.domain.Coordinates
 import com.isproj.domain.Group
 import com.isproj.domain.Location
 import com.isproj.domain.Person
+import com.isproj.domain.enums.Color
+import com.isproj.domain.enums.Country
+import com.isproj.domain.enums.FormOfEducation
+import com.isproj.domain.enums.Semester
 import com.isproj.repo.CoordinatesRepository
-import com.isproj.repo.GroupRepository
+import com.isproj.repo.GroupFilterRepository
 import com.isproj.repo.LocationRepository
 import com.isproj.repo.PersonRepository
+import io.micronaut.data.model.Page
+import io.micronaut.data.model.Pageable
 import jakarta.inject.Singleton
 
 @Singleton
 class GroupAggregateService(
-    private val groups: GroupRepository,
+    private val groups: GroupFilterRepository,
     private val coords: CoordinatesRepository,
     private val persons: PersonRepository,
     private val locations: LocationRepository,
@@ -84,4 +90,21 @@ class GroupAggregateService(
                 ),
             )
         }
+
+    fun findByFilterPaged(key: String, rawValue: String, pageable: Pageable): Page<Group> {
+        val v = rawValue.trim()
+        return when (key) {
+            "name" -> groups.findByNameEqualsIgnoreCase(v, pageable)
+            "formOfEducation" -> groups.findByFormOfEducation(enumVal<FormOfEducation>(v), pageable)
+            "semesterEnum" -> groups.findBySemesterEnum(enumVal<Semester>(v), pageable)
+            "groupAdmin.name" -> groups.findByGroupAdminNameEqualsIgnoreCase(v, pageable)
+            "groupAdmin.eyeColor" -> groups.findByGroupAdminEyeColor(enumVal<Color>(v), pageable)
+            "groupAdmin.hairColor" -> groups.findByGroupAdminHairColor(enumVal<Color>(v), pageable)
+            "groupAdmin.nationality" -> groups.findByGroupAdminNationality(enumVal<Country>(v), pageable)
+            else -> groups.findAll(pageable)
+        }
+    }
+
+    private inline fun <reified E : Enum<E>> enumVal(v: String): E =
+        java.lang.Enum.valueOf(E::class.java, v.uppercase())
 }
