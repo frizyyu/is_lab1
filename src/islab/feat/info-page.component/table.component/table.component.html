@@ -132,7 +132,7 @@
           <td tuiTd>{{ s.name }}</td>
           <td tuiTd>({{ s.coordinates.x }}, {{ s.coordinates.y }})</td>
           <td tuiTd>
-            {{ s.creationDate | date : 'short' }}
+            {{ s.creationDate | arrDate : 3 }}
           </td>
           <td tuiTd>{{ s.studentsCount }}</td>
           <td tuiTd>{{ s.expelledStudents }}</td>

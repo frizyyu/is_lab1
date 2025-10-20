@@ -1,24 +1,41 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Group } from '../types/group.type';
-import { catchError, EMPTY, map, Observable, of, throwError } from 'rxjs';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { mapGroupsToBackendDto } from '../utils/dto-mappers';
 import { AvgShouldResp } from '../types/avg-should-resp.type';
+import { PageResponse } from '../types/page.type';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly base = environment.API_BASE;
   private readonly http = inject(HttpClient);
 
-  public getGroups() {
-    return this.http
-      .get<Group[]>(`${this.base}/groups`)
-      .pipe(
-        catchError((error: HttpErrorResponse) =>
-          error.status === 421 ? throwError(error) : EMPTY,
-        ),
-      );
+  getGroupsPage(opts?: {
+    filter?: { key: string; value: string };
+    page?: number;
+    size?: number;
+    sort?: string;
+  }) {
+    let params = new HttpParams()
+      .set('page', String(opts?.page ?? 0))
+      .set('size', String(opts?.size ?? 20));
+    if (opts?.sort) params = params.set('sort', opts.sort);
+    const f = opts?.filter;
+    if (f?.key && f.value?.trim()) {
+      params = params.set('filterKey', f.key).set('filterValue', f.value.trim());
+    }
+    return this.http.get<PageResponse<Group>>(`/api/groups`, { params });
+  }
+
+  getGroups(opts?: {
+    filter?: { key: string; value: string };
+    page?: number;
+    size?: number;
+    sort?: string;
+  }) {
+    return this.getGroupsPage(opts).pipe(map((p) => p?.content ?? []));
   }
 
   public createGroups(groups: Group[]): Observable<Group[]> {
@@ -36,7 +53,7 @@ export class ApiService {
   }
 
   public getAvgShouldBeExpelled() {
-    return this.http.get<AvgShouldResp>(`${this.base}/groups/stats/avg-should-be-expelled`).pipe(
+    return this.http.get<AvgShouldResp>(`${this.base}/groups/stats/avg/should/be/expelled`).pipe(
       map((r) => r?.avgShouldBeExpelled ?? null),
       catchError(() => of(null)),
     );
@@ -44,7 +61,7 @@ export class ApiService {
 
   public getMinByExpelledStudents() {
     return this.http
-      .get<Group | null>(`${this.base}/groups/stats/min-expelled-students`, { observe: 'body' })
+      .get<Group | null>(`${this.base}/groups/stats/min/expelled/students`, { observe: 'body' })
       .pipe(
         map((g) => g ?? null),
         catchError(() => of(null)),
@@ -53,19 +70,19 @@ export class ApiService {
 
   public expelAllStudents(id: number) {
     return this.http
-      .put<Group>(`${this.base}/groups/${id}/expel-all`, {}, { observe: 'body' })
+      .put<Group>(`${this.base}/groups/${id}/expel/all`, {}, { observe: 'body' })
       .pipe(catchError((error) => throwError(() => error)));
   }
 
   public addStudent(id: number) {
     return this.http
-      .put<Group>(`${this.base}/groups/${id}/add-student`, {}, { observe: 'body' })
+      .put<Group>(`${this.base}/groups/${id}/add/student`, {}, { observe: 'body' })
       .pipe(catchError((error) => throwError(() => error)));
   }
 
   public getGroupsByAdminHeightGreater(min: number) {
     return this.http
-      .get<Group[]>(`${this.base}/groups/stats/admin-height-greater/${min}`)
+      .get<Group[]>(`${this.base}/groups/stats/admin/height/greater/${min}`)
       .pipe(catchError(() => of([])));
   }
 }

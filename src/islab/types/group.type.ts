@@ -8,7 +8,7 @@ export type Group = {
   id: number;
   name: string;
   coordinates: Coordinates;
-  creationDate: Date;
+  creationDate: string;
   studentsCount: number;
   expelledStudents: number;
   transferredStudents: number;

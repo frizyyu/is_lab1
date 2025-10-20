@@ -13,7 +13,7 @@
   <div class="filter-controls">
     <label class="control">
       Filter column
-      <select [(ngModel)]="filter.key">
+      <select [(ngModel)]="filter.key" (change)="applyFilters()">
         <option [ngValue]="''">— none —</option>
         <option *ngFor="let o of stringColumnOptions" [ngValue]="o.key">
           {{ o.label }}
@@ -23,13 +23,50 @@
 
     <label class="control">
       Exact value
-      <input [(ngModel)]="filter.value" placeholder="Enter exact value" />
+      <input
+        [(ngModel)]="filter.value"
+        (keyup.enter)="applyFilters()"
+        placeholder="Enter exact value"
+      />
     </label>
 
-    <button tuiButton size="s" type="button" (click)="clearFilters()">Clear</button>
+    <button tuiButton size="s" type="button" (click)="clearFilters(); applyFilters()">Clear</button>
+
+    <label class="control">
+      Sort by
+      <select [(ngModel)]="sortKey" (change)="reload()">
+        <option [ngValue]="''">— none —</option>
+        <option value="id">№</option>
+        <option value="name">Name</option>
+        <option value="creationDate">Creation Date</option>
+        <option value="studentsCount">Students</option>
+        <option value="expelledStudents">Expelled</option>
+        <option value="transferredStudents">Transferred</option>
+        <option value="formOfEducation">Form</option>
+        <option value="shouldBeExpelled">Should Expel</option>
+        <option value="semesterEnum">Semester</option>
+        <option value="groupAdmin.name">Admin</option>
+        <option value="groupAdmin.eyeColor">Eyes</option>
+        <option value="groupAdmin.hairColor">Hair</option>
+        <option value="groupAdmin.height">Height</option>
+        <option value="groupAdmin.nationality">Nationality</option>
+      </select>
+    </label>
+
+    <label class="control">
+      Dir
+      <select [(ngModel)]="sortDir" (change)="reload()">
+        <option value="asc">asc</option>
+        <option value="desc">desc</option>
+      </select>
+    </label>
   </div>
 </div>
-
+<div class="paging-controls">
+  <button tuiButton size="s" type="button" (click)="prevPage()" [disabled]="page <= 0">Prev</button>
+  <span>Page: {{ page + 1 }}</span>
+  <button tuiButton size="s" type="button" (click)="nextPage()">Next</button>
+</div>
 <tui-scrollbar class="scrollbar">
   <cdk-virtual-scroll-viewport
     #viewport
@@ -219,7 +256,7 @@
       </thead>
 
       <tbody tuiTbody>
-        <tr *cdkVirtualFor="let g of filteredRows() | tuiTableSort" tuiTr>
+        <tr *cdkVirtualFor="let g of groups()" tuiTr>
           <td *tuiCell="'select'" tuiTd>
             <button size="xs" tuiButton type="button" class="remove-rows" (click)="removeRows(g)">
               remove
@@ -227,51 +264,31 @@
           </td>
 
           <td *tuiCell="'id'" tuiTd>{{ g.id }}</td>
-
           <td *tuiCell="'name'" tuiTd>{{ g.name }}</td>
-
           <td *tuiCell="'coordinates'" tuiTd>({{ g.coordinates.x }}, {{ g.coordinates.y }})</td>
 
           <td *tuiCell="'creationDate'" tuiTd>
-            {{ g.creationDate | date : 'short' }}
+            {{ g.creationDate | arrDate : 3 }}
           </td>
 
           <td *tuiCell="'studentsCount'" tuiTd>{{ g.studentsCount }}</td>
-
           <td *tuiCell="'expelledStudents'" tuiTd>{{ g.expelledStudents }}</td>
-
           <td *tuiCell="'transferredStudents'" tuiTd>{{ g.transferredStudents }}</td>
-
           <td *tuiCell="'formOfEducation'" tuiTd>{{ g.formOfEducation }}</td>
-
           <td *tuiCell="'shouldBeExpelled'" tuiTd>{{ g.shouldBeExpelled }}</td>
-
           <td *tuiCell="'semesterEnum'" tuiTd>{{ g.semesterEnum }}</td>
 
-          <td *tuiCell="'admin'" tuiTd>
-            {{ g.groupAdmin?.name }}
-          </td>
-
-          <td *tuiCell="'eyeColor'" tuiTd>
-            {{ g.groupAdmin?.eyeColor }}
-          </td>
-
-          <td *tuiCell="'hairColor'" tuiTd>
-            {{ g.groupAdmin?.hairColor }}
-          </td>
+          <td *tuiCell="'admin'" tuiTd>{{ g.groupAdmin?.name }}</td>
+          <td *tuiCell="'eyeColor'" tuiTd>{{ g.groupAdmin?.eyeColor }}</td>
+          <td *tuiCell="'hairColor'" tuiTd>{{ g.groupAdmin?.hairColor }}</td>
 
           <td *tuiCell="'location'" tuiTd>
             ({{ g.groupAdmin?.location.x }}; {{ g.groupAdmin?.location.y }};
             {{ g.groupAdmin?.location.z }})
           </td>
 
-          <td *tuiCell="'height'" tuiTd>
-            {{ g.groupAdmin?.height }}
-          </td>
-
-          <td *tuiCell="'nationality'" tuiTd>
-            {{ g.groupAdmin?.nationality }}
-          </td>
+          <td *tuiCell="'height'" tuiTd>{{ g.groupAdmin?.height }}</td>
+          <td *tuiCell="'nationality'" tuiTd>{{ g.groupAdmin?.nationality }}</td>
 
           <td *tuiCell="'actions'" tuiTd>
             <button size="xs" tuiButton type="button" (click)="editRow(g)" class="edit-row">
@@ -293,3 +310,44 @@
 >
   <app-edit [currentRow]="selectedRow" (closed)="showEditDialog = false"></app-edit>
 </ng-template>
+@if (groupIds().length > 0) {
+<div class="inform">
+  <div class="stats">
+    <form [formGroup]="form" tuiForm class="form">
+      <span>
+        Number for greater than:
+        <tui-input-inline class="inline-field">
+          <input placeholder="_______________" formControlName="num" [ngModel]="0" />
+        </tui-input-inline>
+      </span>
+      <span>
+        Choose group for buttons
+        <tui-textfield class="text-field" tuiChevron>
+          <select
+            placeholder="Choose"
+            tuiSelect
+            formControlName="groupNum"
+            [items]="groupIds()"
+            [ngModel]="groupIds()[0]"
+          ></select
+        ></tui-textfield>
+      </span>
+      <div class="buttonContainer">
+        <button tuiButton (click)="expellAllFromGroup()">Expel all from group</button>
+        <button tuiButton (click)="addStudentInGroup()">Add student into group</button>
+      </div>
+    </form>
+    <span>shouldBeExpelled avg: {{ stats().avgShouldBeExpelled }}</span>
+    <span
+      >Minimal by expelledStudents
+      <app-table [source]="[stats().minByExpelled]" />
+    </span>
+    <span
+      >greater than groupAdmin
+      <app-table [source]="stats().minByAdmin" />
+    </span>
+  </div>
+</div>
+} @else {
+<span>Group list is empty</span>
+}

@@ -4,18 +4,16 @@ import { groupActions } from '../actions/group.actions';
 import { concatLatestFrom } from '@ngrx/operators';
 import {
   catchError,
-  defaultIfEmpty,
+  distinctUntilChanged,
   EMPTY,
+  finalize,
   forkJoin,
-  interval,
   map,
   of,
-  startWith,
   switchMap,
   take,
   takeUntil,
   tap,
-  timer,
 } from 'rxjs';
 import { ApiService } from '../../islab/api/api.service';
 import { routerActions } from '../actions/router.actions';
@@ -26,23 +24,128 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { selectSortNum } from '../selectors/group.selector';
 import { rootActions } from '../actions/root.actions';
+import { GroupsWsService } from '../../islab/feat/services/groups-ws.service';
 
-export const onLoad$ = createEffect(
-  (actions$ = inject(Actions), apiService$ = inject(ApiService)) => {
-    return actions$.pipe(
+let latestFilter: { key: string; value: string } | null = null;
+let latestSort = null;
+let reloadInFlight = false;
+
+export const rememberFilter$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
       ofType(groupActions.load),
+      tap(({ filter, sort }) => {
+        latestFilter =
+          filter?.key && filter.value?.trim()
+            ? { key: filter.key, value: filter.value.trim() }
+            : null;
+        latestSort = sort ?? 'id';
+        reloadInFlight = true;
+      }),
+    ),
+  { functional: true, dispatch: false },
+);
+
+export const clearInFlightOnLoadDone$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(groupActions.loadSuccess, groupActions.loadFailed),
+      tap(() => {
+        reloadInFlight = false;
+      }),
+    ),
+  { functional: true, dispatch: false },
+);
+
+export const respectFilterOnWs$ = createEffect(
+  (actions$ = inject(Actions)) =>
+    actions$.pipe(
+      ofType(groupActions.autoUpdate),
+      map(({ groups }) => sigOf(groups)),
+      distinctUntilChanged(),
+      switchMap(() => {
+        if (reloadInFlight) return EMPTY;
+        reloadInFlight = true;
+        return of(
+          groupActions.load({
+            filter: latestFilter,
+            page: 0,
+            size: 5,
+            sort: latestSort,
+          }),
+        );
+      }),
+    ),
+  { functional: true },
+);
+
+const sigOf = (arr: any[] | null | undefined) =>
+  (arr ?? [])
+    .map((g) =>
+      [
+        g.id ?? `d:${g.draftId}`,
+        g.name,
+        g.studentsCount,
+        g.expelledStudents,
+        g.transferredStudents,
+        g.shouldBeExpelled,
+        g.semesterEnum,
+        g.formOfEducation,
+        g.groupAdmin?.height,
+        g.groupAdmin?.name,
+      ].join('~'),
+    )
+    .join('|');
+
+export const liveUpdates$ = createEffect(
+  (actions$ = inject(Actions), ws = inject(GroupsWsService)) => {
+    const stop$ = actions$.pipe(ofType(groupActions.stopAutoUpdate));
+
+    return actions$.pipe(
+      ofType(rootActions.applicationStart),
+      take(1),
       switchMap(() =>
-        interval(1000).pipe(
-          startWith(0),
-          switchMap(() => apiService$.getGroups().pipe(catchError(() => EMPTY))),
-          take(1),
-          map((groups) => groupActions.loadSuccess({ groups })),
-          takeUntil(timer(10000)),
-          defaultIfEmpty(groupActions.loadFailed({ error: 'EMPTY_RESPONSE' })),
+        ws.connect().pipe(
+          distinctUntilChanged((a, b) => sigOf(a.groups) === sigOf(b.groups)),
+          map((p) =>
+            groupActions.autoUpdate({
+              groups: p.groups ?? [],
+              avgShouldBeExpelled: p.avgShouldBeExpelled ?? null,
+              minByExpelled: p.minByExpelled ?? null,
+              minByAdmin: p.minByAdmin ?? [],
+            }),
+          ),
+          takeUntil(stop$),
+          finalize(() => ws.close()),
+          catchError(() => of(groupActions.autoUpdateFailed())),
         ),
       ),
     );
   },
+  { functional: true },
+);
+
+export const loadGroups$ = createEffect(
+  (actions$ = inject(Actions), api = inject(ApiService)) =>
+    actions$.pipe(
+      ofType(groupActions.load),
+      switchMap(({ filter, page = 0, size = 20, sort = '' }) =>
+        api.getGroupsPage({ filter: filter ?? undefined, page, size, sort }).pipe(
+          map((resp) =>
+            groupActions.loadSuccess({
+              groups: resp?.content ?? [],
+              pageMeta: {
+                pageNumber: resp?.pageNumber ?? 0,
+                size: resp?.size ?? size,
+                totalPages: resp?.totalPages ?? 0,
+                totalSize: resp?.totalSize ?? 0,
+              },
+            }),
+          ),
+          catchError((error) => of(groupActions.loadFailed({ error }))),
+        ),
+      ),
+    ),
   { functional: true },
 );
 
@@ -61,38 +164,6 @@ export const onLoadSuccess$ = createEffect(
     return actions$.pipe(
       ofType(groupActions.loadSuccess),
       map(() => routerActions.navigateToGroupListPage()),
-    );
-  },
-  { functional: true },
-);
-
-export const autoPolling$ = createEffect(
-  (actions$ = inject(Actions), store$ = inject(Store), api = inject(ApiService)) => {
-    return actions$.pipe(
-      ofType(rootActions.applicationStart, groupActions.autoUpdate, groupActions.autoUpdateFailed),
-      switchMap(() =>
-        timer(600, 600).pipe(
-          concatLatestFrom(() => [store$.select(selectSortNum)]),
-          switchMap(([, min]) =>
-            forkJoin({
-              groups: api.getGroups(),
-              avgShouldBeExpelled: api.getAvgShouldBeExpelled(),
-              minByExpelled: api.getMinByExpelledStudents(),
-              minByAdmin: api.getGroupsByAdminHeightGreater(min),
-            }).pipe(
-              map(({ groups, avgShouldBeExpelled, minByExpelled, minByAdmin }) =>
-                groupActions.autoUpdate({
-                  groups,
-                  avgShouldBeExpelled,
-                  minByExpelled,
-                  minByAdmin: minByAdmin,
-                }),
-              ),
-              catchError(() => of(groupActions.autoUpdateFailed)),
-            ),
-          ),
-        ),
-      ),
     );
   },
   { functional: true },
@@ -149,16 +220,6 @@ export const updateGroups$ = createEffect(
   { functional: true },
 );
 
-export const reloadAfterAdd$ = createEffect(
-  (actions$ = inject(Actions)) => {
-    return actions$.pipe(
-      ofType(groupActions.createSuccess),
-      map(() => groupActions.load()),
-    );
-  },
-  { functional: true },
-);
-
 export const notifyCreateSuccess$ = createEffect(
   (actions$ = inject(Actions), alerts = inject(TuiAlertService)) => {
     return actions$.pipe(
@@ -179,11 +240,11 @@ export const notifyCreateSuccess$ = createEffect(
 export const notifyCreateFailure$ = createEffect(
   (actions$ = inject(Actions), alerts = inject(TuiAlertService)) => {
     return actions$.pipe(
-      ofType(groupActions.createFailed),
-      tap(({ error }) => {
+      ofType(groupActions.createFailed, groupActions.updateFailed),
+      tap(() => {
         alerts
-          .open(`Error while group creating: ${error.message}`, {
-            label: 'Groups creation',
+          .open(`Server responsed with error. Check fields`, {
+            label: 'Error',
             autoClose: 5000,
           })
           .subscribe();

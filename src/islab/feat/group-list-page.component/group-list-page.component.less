@@ -3,6 +3,12 @@ span {
   margin-right: 5rem;
 }
 
+.paging-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 table {
   inline-size: 100%;
   padding-top: 2rem;
@@ -24,7 +30,7 @@ table {
 }
 
 .viewport {
-  block-size: 100vh;
+  block-size: 27rem;
 }
 
 .scrollbar {
@@ -82,7 +88,25 @@ table {
   }
 }
 
-/* optional: keep table header on top of the toolbar margin */
 .table {
   margin-top: 4px;
+}
+
+.inform {
+  gap: 2rem;
+  font-size: 1rem;
+}
+
+.stats {
+  display: grid;
+  gap: 2rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }

@@ -17,7 +17,7 @@ export class MainPageComponent {
   protected readonly showLoader = this.store$.selectSignal(selectShowLoader);
 
   public onListOpenCick() {
-    this.store$.dispatch(groupActions.load());
+    this.store$.dispatch(groupActions.load({}));
   }
 
   public onStatsClick() {

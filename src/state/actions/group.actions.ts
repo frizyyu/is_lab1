@@ -14,9 +14,18 @@ export const groupActions = createActionGroup({
       minByAdmin: Group[] | null;
     }>(),
     autoUpdateFailed: emptyProps(),
+    stopAutoUpdate: emptyProps(),
 
-    load: emptyProps(),
-    loadSuccess: props<{ groups: Group[] }>(),
+    load: props<{
+      filter?: { key: string; value: string } | null;
+      page?: number;
+      size?: number;
+      sort?: string;
+    }>(),
+    loadSuccess: props<{
+      groups: Group[];
+      pageMeta: { pageNumber: number; size: number; totalPages: number; totalSize: number };
+    }>(),
     loadFailed: props<{ error: unknown }>(),
 
     create: props<{ groups: Group[] }>(),

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject, input, output, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -28,7 +27,6 @@ import { selectDraftGroups, selectGroups } from '../../../state/selectors/group.
     TuiTextfield,
     TuiChevron,
     TuiButton,
-    DatePipe,
   ],
   templateUrl: './edit.component.html',
   styleUrl: './edit.component.less',

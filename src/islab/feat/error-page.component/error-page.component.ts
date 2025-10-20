@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { TuiCardLarge } from '@taiga-ui/layout';
 import { Store } from '@ngrx/store';
-import { LoaderComponent } from '../loader.component/loader.component';
 import { selectShowLoader } from '../../../state/selectors/root.selector';
 import { routerActions } from '../../../state/actions/router.actions';
 
 @Component({
   selector: 'app-error-page',
-  imports: [TuiCardLarge, LoaderComponent],
+  imports: [TuiCardLarge],
   templateUrl: './error-page.component.html',
   styleUrl: './error-page.component.less',
 })

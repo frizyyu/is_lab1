@@ -11,6 +11,7 @@ import {
 import { Group } from '../../../types/group.type';
 import { CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { TuiScrollable, TuiScrollbar } from '@taiga-ui/core';
+import { ArrDatePipe } from '../../../pipes/arr-date.pipe';
 
 @Component({
   selector: 'app-table',
@@ -26,6 +27,7 @@ import { TuiScrollable, TuiScrollbar } from '@taiga-ui/core';
     CdkVirtualScrollViewport,
     TuiScrollable,
     TuiScrollbar,
+    ArrDatePipe,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.less',

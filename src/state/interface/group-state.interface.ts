@@ -6,4 +6,10 @@ export interface GroupState {
   draftGroups: Group[];
   stats: Stats;
   sortNum: number;
+  pageMeta: {
+    pageNumber: number;
+    size: number;
+    totalPages: number;
+    totalSize: number;
+  };
 }
